@@ -12,7 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
@@ -44,7 +46,8 @@ public class AuthoriseController {
     @GetMapping("/callback")
     public String callback(@RequestParam String code,
                            @RequestParam String state,
-                           HttpServletRequest request) {
+                           HttpServletRequest request,
+                           HttpServletResponse response) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(client_id);
         accessTokenDTO.setCode(code);
@@ -58,17 +61,22 @@ public class AuthoriseController {
             User user = new User();
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setName(githubUser.getName());
-            //token:自定义的用户令牌,用来判断数据库中是否有这个用户
-            user.setToken(UUID.randomUUID().toString());
+            // token:自定义的用户令牌,用来判断数据库中是否有这个用户
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
             userMapper.insert(user);
-            //登入成功，写入cookie和session
-            session.setAttribute("user", githubUser);
+            // 登入成功，写入cookie和session
+            // session.setAttribute("user", githubUser);
+            // 自定义的cookie，传到/路径
+            // 自定义cookie的好处，就是在项目重启或宕机之后（session重置），用户刷新页面（但没有重启/退出浏览器）后
+            // 用户可以通过存在浏览器中里的token信息（后端是IndexController通过token查询数据库）直接登录。而不用手动点击登录按钮
+            response.addCookie(new Cookie("token",token));
             return "redirect:/";
         } else {
-            //登入失败，重新登入。登入失败只有一种情况，就是超时请求。
-            //因为单纯的账号密码错误在访问https://github.com/login/oauth/authorize这个页面后就已经校验了
+            // 登入失败，重新登入。登入失败只有一种情况，就是超时请求。
+            // 因为单纯的账号密码错误在访问https://github.com/login/oauth/authorize这个页面后就已经校验了
             return "redirect:/";
         }
     }
