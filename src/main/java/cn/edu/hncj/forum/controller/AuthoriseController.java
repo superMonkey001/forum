@@ -66,6 +66,7 @@ public class AuthoriseController {
             user.setToken(token);
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
+            user.setAvatarUrl(githubUser.getAvatar_url());
             // 登入成功，写入cookie和session
             // session.setAttribute("user", githubUser);
             // 这一步相当于模拟写入session到数据库
