@@ -15,6 +15,13 @@ public class GithubProvider {
 
     OkHttpClient client = new OkHttpClient();
 
+
+    /**
+     * 登录功能的第二步
+     * okHttp插件帮助后台模拟post请求，访问https://github.com/login/oauth/access_token
+     * @param accessTokenDTO
+     * @return 返回access_token
+     */
     public String getAccessToken(AccessTokenDTO accessTokenDTO) {
         RequestBody body = RequestBody.create(mediaType, JSON.toJSONString(accessTokenDTO));
         Request request = new Request.Builder()
@@ -31,8 +38,16 @@ public class GithubProvider {
         }
         return null;
     }
+
+    /**
+     * 登录功能的第三步
+     * okHttp插件帮助后台模拟get请求,访问https://api.github.com/user（带头信息Authorization）
+     * @param accessToken
+     * @return 返回Github用户的信息
+     */
     public GithubUser getGithubUser(String accessToken) {
         OkHttpClient client = new OkHttpClient();
+        // github获取User信息的新方式
         Request request = new Request.Builder()
                 .url("https://api.github.com/user")
                 .header("Authorization","token "+accessToken)

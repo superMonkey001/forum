@@ -57,7 +57,7 @@ public class AuthoriseController {
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser githubUser = githubProvider.getGithubUser(accessToken);
         HttpSession session = request.getSession();
-        if (githubUser != null) {
+        if (githubUser != null && githubUser.getId() != null) {
             User user = new User();
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setName(githubUser.getName());
@@ -66,16 +66,17 @@ public class AuthoriseController {
             user.setToken(token);
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
-            userMapper.insert(user);
             // 登入成功，写入cookie和session
             // session.setAttribute("user", githubUser);
+            // 这一步相当于模拟写入session到数据库
+            userMapper.insert(user);
             // 自定义的cookie，传到/路径
             // 自定义cookie的好处，就是在项目重启或宕机之后（session重置），用户刷新页面（但没有重启/退出浏览器）后
-            // 用户可以通过存在浏览器中里的token信息（后端是IndexController通过token查询数据库）直接登录。而不用手动点击登录按钮
+            // 用户可以通过存在浏览器中里的token信息（后端IndexController通过token查询数据库）直接登录。而不用手动点击登录按钮
             response.addCookie(new Cookie("token",token));
             return "redirect:/";
         } else {
-            // 登入失败，重新登入。登入失败只有一种情况，就是超时请求。
+            // 登入失败，重新登入。执行到这的登入失败只有一种情况，就是超时请求。
             // 因为单纯的账号密码错误在访问https://github.com/login/oauth/authorize这个页面后就已经校验了
             return "redirect:/";
         }
