@@ -16,15 +16,14 @@ public class PaginationDTO {
     private Integer page;
     // 当前显示的所有页数
     private List<Integer> pages = new ArrayList<>();
-
+    // 总页数
+    private Integer totalPage;
     /**
      * @param totalCount 数据库中问题的总记录数
      * @param page       当前页
      * @param size       展示多少页
      */
     public void setPagination(Integer totalCount, Integer page, Integer size) {
-        // 总页数
-        Integer totalPage;
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
         } else {

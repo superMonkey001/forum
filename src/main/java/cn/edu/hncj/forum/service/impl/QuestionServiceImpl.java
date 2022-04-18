@@ -24,16 +24,34 @@ public class QuestionServiceImpl implements QuestionService {
 
     /**
      * 查询到所有的QuestionDTO(包括User信息)
-     * @return 返回当前页面的所有信息(questions,page,pages)
+     *
      * @param page
      * @param size
+     * @return 返回当前页面的所有信息(questions, page, pages)
      */
     @Override
     public PaginationDTO list(Integer page, Integer size) {
-        Integer offset = size * (page - 1);
-        List<Question> list = questionMapper.list(offset,size);
-        List<QuestionDTO> questionDTOS = new ArrayList<>();
+
         PaginationDTO paginationDTO = new PaginationDTO();
+        // 一共有多少问题
+        Integer totalCount = questionMapper.count();
+        paginationDTO.setPagination(totalCount, page, size);
+
+        // 因为在IndexController中执行了该方法，并且传入了pagination到index.html，所以要校验
+        // PaginationDTO pagination = questionService.list(page, size);
+        // model.addAttribute("pagination", pagination);
+        if(page < 1) {
+            page = 1;
+        }
+        Integer totalPage = paginationDTO.getTotalPage();
+        if(page > totalPage) {
+            page = totalPage;
+        }
+
+        Integer offset = size * (page - 1);
+        List<Question> list = questionMapper.list(offset, size);
+        List<QuestionDTO> questionDTOS = new ArrayList<>();
+
         for (Question question : list) {
             Integer creatorId = question.getCreator();
             QuestionDTO questionDTO = copy(question);
@@ -42,9 +60,7 @@ public class QuestionServiceImpl implements QuestionService {
             questionDTOS.add(questionDTO);
         }
         paginationDTO.setQuestions(questionDTOS);
-        // 一共有多少问题
-        Integer totalCount = questionMapper.count();
-        paginationDTO.setPagination(totalCount,page,size);
+
         return paginationDTO;
     }
 
@@ -53,7 +69,7 @@ public class QuestionServiceImpl implements QuestionService {
      */
     public QuestionDTO copy(Question question) {
         QuestionDTO questionDTO = new QuestionDTO();
-        BeanUtils.copyProperties(question,questionDTO);
+        BeanUtils.copyProperties(question, questionDTO);
         return questionDTO;
     }
 }

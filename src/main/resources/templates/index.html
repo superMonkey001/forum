@@ -74,9 +74,14 @@
             </div><!--提问的问题信息-->
             <nav aria-label="Page navigation">
                 <ul class="pagination">
-                    <li>
-                        <a href="#" aria-label="Previous">
+                    <li th:if="${pagination.showFirstPage}">
+                        <a th:href="@{/(page = 1)}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li th:if="${pagination.showPrevious}">
+                        <a th:href="@{/(page = ${pagination.page - 1})}" aria-label="Previous">
+                            <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
                     <!-- 循环列表，如[1,2,3,4,5]，每次点击某个页码，就会进行一次完整的for循环，然后把当前路径传递的page参数(pagination.page)和每一个页码(page)进行比较，
@@ -84,8 +89,13 @@
                     <li th:each="currentPage:${pagination.pages}" th:class="${pagination.page == currentPage} ? 'active' : ''">
                         <a th:href="@{/(page=${currentPage})}">[[${currentPage}]]</a>
                     </li>
-                    <li>
-                        <a href="#" aria-label="Next">
+                    <li th:if="${pagination.showNext}">
+                        <a th:href="@{/(page = ${pagination.page + 1})}" aria-label="Next">
+                            <span aria-hidden="true">&gt;</span>
+                        </a>
+                    </li>
+                    <li th:if="${pagination.showEndPage}">
+                        <a th:href="@{/(page = ${pagination.totalPage})}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
