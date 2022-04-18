@@ -1,11 +1,8 @@
 package cn.edu.hncj.forum.service;
 
-import cn.edu.hncj.forum.dto.QuestionDTO;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
+import cn.edu.hncj.forum.dto.PaginationDTO;
 
 
 public interface QuestionService {
-    List<QuestionDTO> list();
+    PaginationDTO list(Integer page, Integer size);
 }

@@ -1,5 +1,6 @@
 package cn.edu.hncj.forum.service.impl;
 
+import cn.edu.hncj.forum.dto.PaginationDTO;
 import cn.edu.hncj.forum.dto.QuestionDTO;
 import cn.edu.hncj.forum.mapper.QuestionMapper;
 import cn.edu.hncj.forum.mapper.UserMapper;
@@ -23,12 +24,16 @@ public class QuestionServiceImpl implements QuestionService {
 
     /**
      * 查询到所有的QuestionDTO(包括User信息)
-     * @return
+     * @return 返回当前页面的所有信息(questions,page,pages)
+     * @param page
+     * @param size
      */
     @Override
-    public List<QuestionDTO> list() {
-        List<Question> list = questionMapper.list();
+    public PaginationDTO list(Integer page, Integer size) {
+        Integer offset = size * (page - 1);
+        List<Question> list = questionMapper.list(offset,size);
         List<QuestionDTO> questionDTOS = new ArrayList<>();
+        PaginationDTO paginationDTO = new PaginationDTO();
         for (Question question : list) {
             Integer creatorId = question.getCreator();
             QuestionDTO questionDTO = copy(question);
@@ -36,7 +41,11 @@ public class QuestionServiceImpl implements QuestionService {
             questionDTO.setUser(user);
             questionDTOS.add(questionDTO);
         }
-        return questionDTOS;
+        paginationDTO.setQuestions(questionDTOS);
+        // 一共有多少问题
+        Integer totalCount = questionMapper.count();
+        paginationDTO.setPagination(totalCount,page,size);
+        return paginationDTO;
     }
 
     /**

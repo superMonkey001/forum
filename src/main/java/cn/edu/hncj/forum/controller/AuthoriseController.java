@@ -46,7 +46,6 @@ public class AuthoriseController {
     @GetMapping("/callback")
     public String callback(@RequestParam String code,
                            @RequestParam String state,
-                           HttpServletRequest request,
                            HttpServletResponse response) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(client_id);
@@ -56,7 +55,6 @@ public class AuthoriseController {
         accessTokenDTO.setState(state);
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser githubUser = githubProvider.getGithubUser(accessToken);
-        HttpSession session = request.getSession();
         if (githubUser != null && githubUser.getId() != null) {
             User user = new User();
             user.setAccountId(String.valueOf(githubUser.getId()));
