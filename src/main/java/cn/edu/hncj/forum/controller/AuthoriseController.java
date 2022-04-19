@@ -5,6 +5,7 @@ import cn.edu.hncj.forum.dto.GithubUser;
 import cn.edu.hncj.forum.mapper.UserMapper;
 import cn.edu.hncj.forum.model.User;
 import cn.edu.hncj.forum.provider.GithubProvider;
+import cn.edu.hncj.forum.service.UserService;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +39,9 @@ public class AuthoriseController {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private UserService userService;
     /**
      * @param code  Required. The code you received as a response to Step 1.
      * @param state
@@ -62,13 +66,11 @@ public class AuthoriseController {
             // token:自定义的用户令牌,用来判断数据库中是否有这个用户
             String token = UUID.randomUUID().toString();
             user.setToken(token);
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(githubUser.getAvatar_url());
             // 登入成功，写入cookie和session
             // session.setAttribute("user", githubUser);
             // 这一步相当于模拟写入session到数据库
-            userMapper.insert(user);
+            userService.createOrUpdate(user);
             // 自定义的cookie，传到/路径
             // 自定义cookie的好处，就是在项目重启或宕机之后（session重置），用户刷新页面（但没有重启/退出浏览器）后
             // 用户可以通过存在浏览器中里的token信息（后端IndexController通过token查询数据库）直接登录。而不用手动点击登录按钮
@@ -79,5 +81,19 @@ public class AuthoriseController {
             // 因为单纯的账号密码错误在访问https://github.com/login/oauth/authorize这个页面后就已经校验了
             return "redirect:/";
         }
+    }
+    @GetMapping("/logout")
+    public String logout(HttpSession session,
+                         HttpServletResponse response) {
+        // 清除用户登录态
+        session.removeAttribute("user");
+
+        // 清除token
+        Cookie cookie = new Cookie("token", "");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+
+        // 返回首页
+        return "redirect:/";
     }
 }

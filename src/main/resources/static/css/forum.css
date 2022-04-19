@@ -28,3 +28,8 @@ body {
 .profile .section {
     margin-top: 15px;
 }
+
+.forum-menu {
+    font-size: 13px;
+    color: #999;
+}

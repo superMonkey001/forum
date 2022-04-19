@@ -1,10 +1,7 @@
 package cn.edu.hncj.forum.mapper;
 
 import cn.edu.hncj.forum.model.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 @Mapper
@@ -22,4 +19,10 @@ public interface UserMapper {
 
     @Select("select * from user where id = #{id}")
     User findById(Integer id);
+
+    @Select("select * from user where account_id = #{accountId}")
+    User findByAccountId(String accountId);
+
+    @Update("update user set token = #{token},avatar_url = #{avatarUrl},name = #{name},gmt_modified = #{gmtModified} where id = #{id}")
+    void update(User dbUser);
 }

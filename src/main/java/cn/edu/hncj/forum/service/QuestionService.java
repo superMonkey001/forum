@@ -1,6 +1,7 @@
 package cn.edu.hncj.forum.service;
 
 import cn.edu.hncj.forum.dto.PaginationDTO;
+import cn.edu.hncj.forum.dto.QuestionDTO;
 import cn.edu.hncj.forum.model.Question;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface QuestionService {
      * @return 返回当前用户所创建的所有问题
      */
     PaginationDTO list(Integer id, Integer page, Integer size);
+
+    QuestionDTO findById(Integer id);
 }

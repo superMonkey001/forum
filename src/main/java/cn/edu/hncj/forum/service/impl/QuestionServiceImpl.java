@@ -114,6 +114,20 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     /**
+     * 通过id查找问题
+     * @param id
+     * @return
+     */
+    @Override
+    public QuestionDTO findById(Integer id) {
+        Question question = questionMapper.findById(id);
+        User user = userMapper.findById(question.getCreator());
+        QuestionDTO questionDTO = copy(question);
+        questionDTO.setUser(user);
+        return questionDTO;
+    }
+
+    /**
      * Question->QuestionDTO的封装
      */
     public QuestionDTO copy(Question question) {
