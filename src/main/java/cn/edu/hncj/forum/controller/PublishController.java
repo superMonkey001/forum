@@ -11,16 +11,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class PublishController {
     @Autowired
     private QuestionMapper questionMapper;
 
-    @Autowired
-    private UserMapper userMapper;
 
     @GetMapping("/publish")
     public String publish() {
@@ -53,21 +51,9 @@ public class PublishController {
             return "publish";
         }
 
-        //校验用户是否存在，存在就把user存入session，不存在则把错误信息传给前端。
-        User user = null;
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            // 如果当前cookie为token
-            if("token".equals(cookie.getName())) {
-                String token = cookie.getValue();
-                user = userMapper.findUserByToken(token);
-                // 如果用户换了一个浏览器（重启浏览器），才会导致在有token的情况下，查询的user为null
-                if(user != null) {
-                    request.getSession().setAttribute("user",user);
-                }
-                break;
-            }
-        }
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+
         if(user == null) {
             model.addAttribute("error","用户未登录");
             return "publish";

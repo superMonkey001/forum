@@ -1,23 +1,22 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>码农论坛</title>
+    <title th:text="${sectionName}">个人中心</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="css/forum.css">
-    <script src="js/jquery-3.6.0.min.js"></script>
-    <script src="js/bootstrap.min.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/forum.css">
+    <script src="/js/jquery-3.6.0.min.js"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
 </head>
 <body>
 <div th:insert="~{navigation :: navi}"></div>
 <!--  发布框以及发布指南  -->
-<div class="container-fluid main">
+<div class="container-fluid main profile">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-            <h2>
-                <span class="glyphicon glyphicon-list" aria-hidden="true">
-                </span>
+            <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                <span th:text="${sectionName}"></span>
             </h2>
             <hr>
             <div class="media" th:each="question:${pagination.questions}">
@@ -37,12 +36,12 @@
             <nav aria-label="Page navigation">
                 <ul class="pagination">
                     <li th:if="${pagination.showFirstPage}">
-                        <a th:href="@{/(page = 1)}" aria-label="Previous">
+                        <a th:href="@{'/profile/'+${section}(page=${1})}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                     <li th:if="${pagination.showPrevious}">
-                        <a th:href="@{/(page = ${pagination.page - 1})}" aria-label="Previous">
+                        <a th:href="@{'/profile/'+${section}(page=${pagination.page - 1})}" aria-label="Previous">
                             <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
@@ -50,31 +49,31 @@
                     如果当前元素currentPage和page参数相等，则把active属性赋值给这个页码 -->
                     <li th:each="currentPage:${pagination.pages}"
                         th:class="${pagination.page == currentPage} ? 'active' : ''">
-                        <a th:href="@{/(page=${currentPage})}">[[${currentPage}]]</a>
+                        <a th:href="@{'/profile/'+${section}(page=${currentPage})}">[[${currentPage}]]</a>
                     </li>
                     <li th:if="${pagination.showNext}">
-                        <a th:href="@{/(page = ${pagination.page + 1})}" aria-label="Next">
+                        <a th:href="@{'/profile/'+${section}(page=${pagination.page +1})}" aria-label="Next">
                             <span aria-hidden="true">&gt;</span>
                         </a>
                     </li>
                     <li th:if="${pagination.showEndPage}">
-                        <a th:href="@{/(page = ${pagination.totalPage})}" aria-label="Next">
+                        <a th:href="@{'/profile/'+${section}(page=${pagination.totalPage})}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
                 </ul>
             </nav>
+
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <h3>热门话题</h3>
-            一、不开心时，做个深呼吸，不过是糟糕的一天而已，又不是糟糕一辈子。
-            二、心情就像衣服，脏了就拿去洗洗，晒晒阳光自然就会蔓延开来，阳光那么好何必自寻烦恼。
-            三、在这个滥情的年代，一声“亲爱的”充其量也就是个你好，一句“下次请你吃饭”顶多算个谢谢，何必太认真
-            四、每个人都会累，没人能为你承担所有的伤悲，人总有那么一段时间要学会自己长大。
-            五、生活不是林黛玉，不会因为忧伤而风情万种。
-            六、随着年龄的增长，我们愈加发现，或许我们并不是失去了一些人，而是更加懂得到底谁才是最重要的人。
-            七、懒于解释，也无谓能否做个好人，活得不尽纯粹，至少要过得干净利落。
-        </div><!--一大段文字-->
+            <div class="list-group section" >
+                <a href="/profile/questions" th:class="${section == 'questions' ? 'active list-group-item ' : 'list-group-item'}">我的问题</a>
+                <a href="/profile/replies"  th:class="${section == 'replies' ? 'active list-group-item' : 'list-group-item'}">
+                    最新回复
+                    <span class="badge">14</span>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 </body>

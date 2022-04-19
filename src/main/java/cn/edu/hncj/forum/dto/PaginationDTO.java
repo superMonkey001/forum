@@ -19,23 +19,11 @@ public class PaginationDTO {
     // 总页数
     private Integer totalPage;
     /**
-     * @param totalCount 数据库中问题的总记录数
+     * @param totalPage 总页数
      * @param page       当前页
-     * @param size       展示多少页
      */
-    public void setPagination(Integer totalCount, Integer page, Integer size) {
-        if (totalCount % size == 0) {
-            totalPage = totalCount / size;
-        } else {
-            totalPage = totalCount / size + 1;
-        }
-
-        // 防止路径传入的page参数越界
-        if(page < 1) {
-            page = 1;
-        }else if(page > totalPage) {
-            page = totalPage;
-        }
+    public void setPagination(Integer totalPage, Integer page) {
+        this.totalPage = totalPage;
         this.page = page;
 
         pages.add(page);

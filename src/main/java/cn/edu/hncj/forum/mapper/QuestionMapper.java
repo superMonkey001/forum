@@ -21,4 +21,22 @@ public interface QuestionMapper {
     @Select("select count(*) from question")
     Integer count();
 
+    /**
+     * 通过用户id查找他创建的所有问题
+     * @param creator
+     * @param offset
+     * @param size
+     * @return
+     */
+    @Select("select * from question where creator = #{creator} limit #{offset},#{size}")
+    List<Question> listByCreator(@Param("creator") Integer creator,@Param("offset") Integer offset,@Param("size") Integer size);
+
+
+    /**
+     * 查询creator创建的问题数
+     * @param creator
+     * @return
+     */
+    @Select("select count(*) from question where creator = #{creator}")
+    Integer countByCreator(Integer creator);
 }
