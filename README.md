@@ -7,6 +7,9 @@ idea
 数据库:H2  
 前端:thymeleaf
 
+## 插件
+lombok
+
 ## 脚本
 ```sql
 CREATE CACHED TABLE "PUBLIC"."USER"(
@@ -17,6 +20,8 @@ CREATE CACHED TABLE "PUBLIC"."USER"(
     "GMT_CREATE" BIGINT,
     "GMT_MODIFIED" BIGINT
 )
-
-
+```
+### mybatis-generate的maven命令
+```bash
+mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
 ```

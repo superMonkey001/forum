@@ -2,11 +2,15 @@ package cn.edu.hncj.forum.service.impl;
 
 import cn.edu.hncj.forum.dto.PaginationDTO;
 import cn.edu.hncj.forum.dto.QuestionDTO;
+import cn.edu.hncj.forum.exception.CustomizeErrorCode;
+import cn.edu.hncj.forum.exception.CustomizeException;
 import cn.edu.hncj.forum.mapper.QuestionMapper;
 import cn.edu.hncj.forum.mapper.UserMapper;
 import cn.edu.hncj.forum.model.Question;
+import cn.edu.hncj.forum.model.QuestionExample;
 import cn.edu.hncj.forum.model.User;
 import cn.edu.hncj.forum.service.QuestionService;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +38,7 @@ public class QuestionServiceImpl implements QuestionService {
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer totalPage;
         // 一共有多少问题
-        Integer totalCount = questionMapper.count();
+        Integer totalCount = (int)questionMapper.countByExample(new QuestionExample());
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
         } else {
@@ -53,13 +57,14 @@ public class QuestionServiceImpl implements QuestionService {
         paginationDTO.setPagination(totalPage, page);
 
         Integer offset = size * (page - 1);
-        List<Question> list = questionMapper.list(offset, size);
+
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
         List<QuestionDTO> questionDTOS = new ArrayList<>();
 
-        for (Question question : list) {
+        for (Question question : questions) {
             Integer creatorId = question.getCreator();
             QuestionDTO questionDTO = copy(question);
-            User user = userMapper.findById(creatorId);
+            User user = userMapper.selectByPrimaryKey(creatorId);
             questionDTO.setUser(user);
             questionDTOS.add(questionDTO);
         }
@@ -82,7 +87,9 @@ public class QuestionServiceImpl implements QuestionService {
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer totalPage;
         // 一共有多少问题
-        Integer totalCount = questionMapper.countByCreator(id);
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.createCriteria().andCreatorEqualTo(id);
+        Integer totalCount = (int)questionMapper.countByExample(questionExample);
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
         } else {
@@ -98,13 +105,15 @@ public class QuestionServiceImpl implements QuestionService {
         paginationDTO.setPagination(totalPage, page);
 
         Integer offset = size * (page - 1);
-        List<Question> list = questionMapper.listByCreator(id, offset, size);
+        QuestionExample questionExample1 = new QuestionExample();
+        questionExample1.createCriteria().andCreatorEqualTo(id);
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample1, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOS = new ArrayList<>();
 
-        for (Question question : list) {
+        for (Question question : questions) {
             Integer creatorId = question.getCreator();
             QuestionDTO questionDTO = copy(question);
-            User user = userMapper.findById(creatorId);
+            User user = userMapper.selectByPrimaryKey(creatorId);
             questionDTO.setUser(user);
             questionDTOS.add(questionDTO);
         }
@@ -120,11 +129,39 @@ public class QuestionServiceImpl implements QuestionService {
      */
     @Override
     public QuestionDTO findById(Integer id) {
-        Question question = questionMapper.findById(id);
-        User user = userMapper.findById(question.getCreator());
+        Question question = questionMapper.selectByPrimaryKey(id);
+        if(question == null) {
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
+        User user = userMapper.selectByPrimaryKey(question.getCreator());
         QuestionDTO questionDTO = copy(question);
         questionDTO.setUser(user);
         return questionDTO;
+    }
+
+
+    @Override
+    public void createOrUpdate(Question question) {
+        // 如果/publish路径后面没有/id子路径，那么就是通过点击发布按钮新建问题，而不是点击编辑按钮更改问题
+        if(question.getId() == null) {
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
+            questionMapper.insert(question);
+        }else {
+            Question updateQuestion = new Question();
+            updateQuestion.setId(question.getId());
+            updateQuestion.setGmtModified(System.currentTimeMillis());
+            updateQuestion.setTitle(question.getTitle());
+            updateQuestion.setDescription(question.getDescription());
+            updateQuestion.setTag(question.getTag());
+            // 考虑一个场景，用户打开两个页面，一个页面在编辑问题，而另一个页面执行了删除问题的操作，
+            // 那么这个问题将不存在，执行更新操作会返回0
+            int updated = questionMapper.updateByPrimaryKeySelective(updateQuestion);
+            // 更新成功
+            if(updated == 0) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
+        }
     }
 
     /**

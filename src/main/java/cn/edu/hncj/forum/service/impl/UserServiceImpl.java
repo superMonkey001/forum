@@ -2,9 +2,12 @@ package cn.edu.hncj.forum.service.impl;
 
 import cn.edu.hncj.forum.mapper.UserMapper;
 import cn.edu.hncj.forum.model.User;
+import cn.edu.hncj.forum.model.UserExample;
 import cn.edu.hncj.forum.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -13,21 +16,26 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     /**
      * 如果这个用户已经存在于数据库中，则执行创建，否则执行更新操作
-     * @param user
+     * @param user 前端传入后端的用户数据
      */
     @Override
     public void createOrUpdate(User user) {
-        User dbUser = userMapper.findByAccountId(user.getAccountId());
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andAccountIdEqualTo(user.getAccountId());
+        List<User> users = userMapper.selectByExample(userExample);
+        User dbUser = users.get(0);
         if(dbUser == null) {
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
             userMapper.insert(user);
         }else {
-            dbUser.setGmtModified(System.currentTimeMillis());
-            dbUser.setToken(user.getToken());
-            dbUser.setAvatarUrl(user.getAvatarUrl());
-            dbUser.setName(user.getName());
-            userMapper.update(dbUser);
+            User updateUser = new User();
+            updateUser.setId(dbUser.getId());
+            updateUser.setGmtModified(System.currentTimeMillis());
+            updateUser.setToken(user.getToken());
+            updateUser.setAvatarUrl(user.getAvatarUrl());
+            updateUser.setName(user.getName());
+            userMapper.updateByPrimaryKeySelective(updateUser);
         }
     }
 }
