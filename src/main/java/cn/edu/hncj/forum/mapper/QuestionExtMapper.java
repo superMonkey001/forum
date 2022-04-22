@@ -13,5 +13,10 @@ public interface QuestionExtMapper {
      * 通过问题id,增加阅读数
      * @param id
      */
-    void incView(Integer id);
+    int incView(Question id);
+
+    /**
+     * 通过问题id,增加评论数
+     */
+    int incCommentCount(Question question);
 }

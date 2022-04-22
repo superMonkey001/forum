@@ -4,10 +4,9 @@ import cn.edu.hncj.forum.dto.PaginationDTO;
 import cn.edu.hncj.forum.dto.QuestionDTO;
 import cn.edu.hncj.forum.model.Question;
 
-import java.util.List;
-
 
 public interface QuestionService {
+
     PaginationDTO list(Integer page, Integer size);
 
     /**
@@ -16,9 +15,9 @@ public interface QuestionService {
      * @param size 当前长度
      * @return 返回当前用户所创建的所有问题
      */
-    PaginationDTO list(Integer id, Integer page, Integer size);
+    PaginationDTO list(Long id, Integer page, Integer size);
 
-    QuestionDTO findById(Integer id);
+    QuestionDTO findById(Long id);
 
     /**
      * 如果是点击编辑按钮进入publish页面，就是更新
@@ -27,5 +26,8 @@ public interface QuestionService {
      */
     void createOrUpdate(Question question);
 
-
+    /**
+     * 根据问题id增加阅读数
+     */
+    void incView(Long id);
 }

@@ -66,7 +66,7 @@ public class QuestionServiceImpl implements QuestionService {
         List<QuestionDTO> questionDTOS = new ArrayList<>();
 
         for (Question question : questions) {
-            Integer creatorId = question.getCreator();
+            Long creatorId = question.getCreator();
             QuestionDTO questionDTO = copy(question);
             User user = userMapper.selectByPrimaryKey(creatorId);
             questionDTO.setUser(user);
@@ -86,7 +86,7 @@ public class QuestionServiceImpl implements QuestionService {
      * @return
      */
     @Override
-    public PaginationDTO list(Integer id, Integer page, Integer size) {
+    public PaginationDTO list(Long id, Integer page, Integer size) {
 
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer totalPage;
@@ -115,7 +115,7 @@ public class QuestionServiceImpl implements QuestionService {
         List<QuestionDTO> questionDTOS = new ArrayList<>();
 
         for (Question question : questions) {
-            Integer creatorId = question.getCreator();
+            Long creatorId = question.getCreator();
             QuestionDTO questionDTO = copy(question);
             User user = userMapper.selectByPrimaryKey(creatorId);
             questionDTO.setUser(user);
@@ -132,7 +132,7 @@ public class QuestionServiceImpl implements QuestionService {
      * @return
      */
     @Override
-    public QuestionDTO findById(Integer id) {
+    public QuestionDTO findById(Long id) {
         Question question = questionMapper.selectByPrimaryKey(id);
         if(question == null) {
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
@@ -172,6 +172,13 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    public void incView(Long id) {
+        Question question = new Question();
+        question.setId(id);
+        // 做缓存用?
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
+    }
 
     /**
      * Question->QuestionDTO的封装

@@ -23,7 +23,7 @@ public class PublishController {
     private QuestionService questionService;
 
     @GetMapping("/publish/{id}")
-    public String publish(@PathVariable("id") Integer id,Model model) {
+    public String publish(@PathVariable("id") Long id,Model model) {
         QuestionDTO question = questionService.findById(id);
         // 第一时间把用户传入的信息写入model传递给publish.html，主要是用来做提交失败后，回显的功能
         model.addAttribute("title",question.getTitle());
@@ -45,7 +45,7 @@ public class PublishController {
     public String doPublish(@RequestParam("title") String title,
                             @RequestParam("description") String description,
                             @RequestParam("tag") String tag,
-                            @RequestParam(name = "id", required = false) Integer id,
+                            @RequestParam(name = "id", required = false) Long id,
                             HttpServletRequest request,
                             Model model) {
 
