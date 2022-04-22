@@ -1,5 +1,7 @@
 package cn.edu.hncj.forum.advice;
 
+import cn.edu.hncj.forum.dto.ResultDTO;
+import cn.edu.hncj.forum.exception.CustomizeErrorCode;
 import cn.edu.hncj.forum.exception.CustomizeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
@@ -11,18 +13,34 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @author FanJian
+ */
 @ControllerAdvice
 public class CustomizeExceptionHandler {
 
-	@ExceptionHandler(Exception.class)
-	ModelAndView handle(HttpServletRequest request, Throwable ex,
-										   Model model) {
-        if(ex instanceof CustomizeException) {
-        	model.addAttribute("message",ex.getMessage());
-		}else {
-			model.addAttribute("message","服务器冒烟了~~~");
-		}
-		return new ModelAndView("error");
-	}
+    @ExceptionHandler(Exception.class)
+    Object handle(HttpServletRequest request, Throwable ex,
+                  Model model) {
+        final String jsonType = "application/json";
+        String contentType = request.getContentType();
+        // 如果是ajax请求，用户从页面正常的请求，但发生自定义的异常，那么不进行跳转，而是在用户当前页面返回一些自定义异常的信息{code,message}
+        if (jsonType.equals(contentType)) {
+            if (ex instanceof CustomizeException) {
+                // [2002,"未选中任何问题或评论进行回复"]
+                return ResultDTO.errorOf((CustomizeException)ex);
+            } else {
+                return ResultDTO.errorOf(CustomizeErrorCode.SYS_ERROR);
+            }
+        }// 如果是路径的非法请求，就直跳转自定义的错误页面
+        else {
+            if (ex instanceof CustomizeException) {
+                model.addAttribute("message", ex.getMessage());
+            } else {
+                model.addAttribute("message", "服务器冒烟了~~~");
+            }
+            return new ModelAndView("error");
+        }
+    }
 
 }

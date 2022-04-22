@@ -1,0 +1,1 @@
+alter table comment ADD content varchar(1024) null;

@@ -30,8 +30,8 @@ public class LoginInterceptor implements HandlerInterceptor {
                     // 传入条件
                     userExample.createCriteria().andTokenEqualTo(token);
                     List<User> users = userMapper.selectByExample(userExample);
-                    //如果用户换了一个浏览器（重启浏览器），才会导致在有token的情况下，查询的user为null
-                    if (users != null) {
+                    // 如果用户换了一个浏览器（重启浏览器），才会导致在有token的情况下，查询的users为null
+                    if (users != null && users.size() != 0) {
                         request.getSession().setAttribute("user", users.get(0));
                     }
                     break;

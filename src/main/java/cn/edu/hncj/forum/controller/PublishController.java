@@ -32,6 +32,7 @@ public class PublishController {
 
         // 隐藏的id,用来判断问题是否已经存在
         model.addAttribute("id",question.getId());
+
         return "publish";
     }
 
@@ -44,7 +45,7 @@ public class PublishController {
     public String doPublish(@RequestParam("title") String title,
                             @RequestParam("description") String description,
                             @RequestParam("tag") String tag,
-                            @RequestParam("id") Integer id,
+                            @RequestParam(name = "id", required = false) Integer id,
                             HttpServletRequest request,
                             Model model) {
 
@@ -82,6 +83,7 @@ public class PublishController {
         question.setDescription(description);
         question.setTag(tag);
         question.setCreator(user.getId());
+        // id是从<input type="hidden" name="id">这个标签传过来的，如果没有经过/publish/{id}这个请求路径（方法），那么这个id就为Null
         question.setId(id);
         questionService.createOrUpdate(question);
         return "redirect:/";

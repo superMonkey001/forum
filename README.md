@@ -21,7 +21,11 @@ CREATE CACHED TABLE "PUBLIC"."USER"(
     "GMT_MODIFIED" BIGINT
 )
 ```
-### mybatis-generate的maven命令
+##### mybatis-generate的maven命令
 ```bash
 mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+```
+##### 自动执行DDL语句的命令
+```bash
+mvn flyway:migrate
 ```

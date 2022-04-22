@@ -10,7 +10,7 @@ import java.io.IOException;
 
 @Component
 public class GithubProvider {
-    public static final MediaType mediaType
+    public static final MediaType MEDIA_TYPE
             = MediaType.get("application/json; charset=utf-8");
 
     OkHttpClient client = new OkHttpClient();
@@ -23,7 +23,7 @@ public class GithubProvider {
      * @return 返回access_token
      */
     public String getAccessToken(AccessTokenDTO accessTokenDTO) {
-        RequestBody body = RequestBody.create(mediaType, JSON.toJSONString(accessTokenDTO));
+        RequestBody body = RequestBody.create(MEDIA_TYPE, JSON.toJSONString(accessTokenDTO));
         Request request = new Request.Builder()
                 .url("https://github.com/login/oauth/access_token")
                 .post(body)

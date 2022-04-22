@@ -4,6 +4,7 @@ import cn.edu.hncj.forum.dto.PaginationDTO;
 import cn.edu.hncj.forum.dto.QuestionDTO;
 import cn.edu.hncj.forum.exception.CustomizeErrorCode;
 import cn.edu.hncj.forum.exception.CustomizeException;
+import cn.edu.hncj.forum.mapper.QuestionExtMapper;
 import cn.edu.hncj.forum.mapper.QuestionMapper;
 import cn.edu.hncj.forum.mapper.UserMapper;
 import cn.edu.hncj.forum.model.Question;
@@ -22,6 +23,9 @@ import java.util.List;
 public class QuestionServiceImpl implements QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -146,6 +150,9 @@ public class QuestionServiceImpl implements QuestionService {
         if(question.getId() == null) {
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
+            question.setViewCount(0);
+            question.setLikeCount(0);
+            question.setCommentCount(0);
             questionMapper.insert(question);
         }else {
             Question updateQuestion = new Question();
@@ -157,12 +164,14 @@ public class QuestionServiceImpl implements QuestionService {
             // 考虑一个场景，用户打开两个页面，一个页面在编辑问题，而另一个页面执行了删除问题的操作，
             // 那么这个问题将不存在，执行更新操作会返回0
             int updated = questionMapper.updateByPrimaryKeySelective(updateQuestion);
-            // 更新成功
+            // 更新失败
             if(updated == 0) {
+                // 抛出问题不存在异常
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
     }
+
 
     /**
      * Question->QuestionDTO的封装

@@ -23,7 +23,10 @@ public class UserServiceImpl implements UserService {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andAccountIdEqualTo(user.getAccountId());
         List<User> users = userMapper.selectByExample(userExample);
-        User dbUser = users.get(0);
+        User dbUser = null;
+        if(users != null && users.size() != 0) {
+            dbUser = users.get(0);
+        }
         if(dbUser == null) {
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());

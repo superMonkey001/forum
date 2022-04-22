@@ -1,4 +1,4 @@
-CREATE CACHED TABLE USER(
+CREATE TABLE USER(
     "ID" int auto_increment primary key ,
     "ACCOUNT_ID" VARCHAR(100),
     "NAME" VARCHAR(32),
