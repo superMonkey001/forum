@@ -1,4 +1,4 @@
-package cn.edu.hncj.forum.dto;
+package cn.edu.hncj.forum.provider.dto;
 
 import lombok.Data;
 import lombok.ToString;

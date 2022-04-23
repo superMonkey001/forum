@@ -1,9 +1,10 @@
 package cn.edu.hncj.forum.provider;
 
 import cn.edu.hncj.forum.dto.AccessTokenDTO;
-import cn.edu.hncj.forum.dto.GithubUser;
+import cn.edu.hncj.forum.provider.dto.GithubUser;
 import com.alibaba.fastjson.JSON;
 import okhttp3.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -13,7 +14,15 @@ public class GithubProvider {
     public static final MediaType MEDIA_TYPE
             = MediaType.get("application/json; charset=utf-8");
 
-    OkHttpClient client = new OkHttpClient();
+
+    @Value("${github.client.id}")
+    private String clientId;
+
+    @Value("${github.redirect.uri}")
+    private String redirectUri;
+
+    @Value("${github.client.secret}")
+    private String clientSecret;
 
 
     /**
@@ -23,6 +32,10 @@ public class GithubProvider {
      * @return 返回access_token
      */
     public String getAccessToken(AccessTokenDTO accessTokenDTO) {
+        accessTokenDTO.setClient_id(clientId);
+        accessTokenDTO.setRedirect_uri(redirectUri);
+        accessTokenDTO.setClient_secret(clientSecret);
+        OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(MEDIA_TYPE, JSON.toJSONString(accessTokenDTO));
         Request request = new Request.Builder()
                 .url("https://github.com/login/oauth/access_token")

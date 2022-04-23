@@ -16,7 +16,16 @@ function post() {
             if (response.code == 200) {
                 $("#comment_section").hide();
             } else {
-                alert(response.message);
+                // 如果用户未登录
+                if (response.code == 2003) {
+                    var isAccept = confirm(response.message);
+                    if (isAccept) {
+                        // 打开一个新的页面
+                        window.open("https://github.com/login/oauth/authorize?client_id=7b8e0403167f8fef70f3&redirect_uri=http://localhost:8887/callback&scope=user&state=1")
+                        window.localStorage.setItem("closable","true");
+                    }
+
+                }
             }
         },
         // success回调函数的response参数的格式
