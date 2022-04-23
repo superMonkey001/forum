@@ -26,11 +26,11 @@ public class CustomizeExceptionHandler {
     @ExceptionHandler(Exception.class)
     ModelAndView handle(HttpServletRequest request, Throwable ex,
                         Model model, HttpServletResponse response) {
-        final String jsonType = "application/json;charset=utf8";
+        final String jsonType = "application/json";
         String contentType = request.getContentType();
         // 如果是ajax请求，用户从页面正常的请求，但发生自定义的异常，那么不进行跳转，而是在用户当前页面返回一些自定义异常的信息{code,message}
         if (jsonType.equals(contentType)) {
-            ResultDTO resultDTO = null;
+            ResultDTO resultDTO;
             if (ex instanceof CustomizeException) {
                 // [2002,"未选中任何问题或评论进行回复"]
                 resultDTO = ResultDTO.errorOf((CustomizeException)ex);

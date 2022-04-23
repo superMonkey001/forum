@@ -13,7 +13,11 @@ import cn.edu.hncj.forum.model.Question;
 import cn.edu.hncj.forum.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @author FanJian
+ */
 @Service
 public class CommentServiceImpl implements CommentService {
 
@@ -26,7 +30,9 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
+
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void insert(Comment comment) {
         // 如果父级评论或父级问题被删除
         if (comment.getParentId() == null || comment.getParentId() == 0) {

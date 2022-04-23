@@ -28,7 +28,7 @@ public class CommentController {
 
     @ResponseBody
     @PostMapping("/comment")
-    public Object comment(@RequestBody CommentDTO commentDTO,
+    public ResultDTO comment(@RequestBody CommentDTO commentDTO,
                           HttpServletRequest request) {
 
         HttpSession session = request.getSession();
@@ -46,6 +46,6 @@ public class CommentController {
         comment.setType(commentDTO.getType());
         comment.setLikeCount(0L);
         commentService.insert(comment);
-        return null;
+        return ResultDTO.okOf();
     }
 }

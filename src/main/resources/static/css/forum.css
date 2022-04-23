@@ -36,3 +36,13 @@ body {
 .jumbotron {
     margin: 30px;
 }
+.media-body {
+    padding-top: 12px;
+}
+.textarea-comment {
+    margin: 10px 0;
+}
+.btn-comment {
+    float: right;
+    margin-bottom: 10px;
+}

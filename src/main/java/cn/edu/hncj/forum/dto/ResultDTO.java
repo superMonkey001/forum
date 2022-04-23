@@ -33,6 +33,6 @@ public class ResultDTO<T> {
         ResultDTO resultDTO = new ResultDTO();
         resultDTO.setCode(ex.getCode());
         resultDTO.setMessage(ex.getMessage());
-        return null;
+        return resultDTO;
     }
 }
