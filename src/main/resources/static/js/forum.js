@@ -14,15 +14,17 @@ function post() {
         }),
         success: function (response) {
             if (response.code == 200) {
-                $("#comment_section").hide();
+                $("#comment_content").val("");
+                location.reload();
             } else {
                 // 如果用户未登录
                 if (response.code == 2003) {
                     var isAccept = confirm(response.message);
                     if (isAccept) {
+                        $('#myModal').modal({});
                         // 打开一个新的页面
-                        window.open("https://github.com/login/oauth/authorize?client_id=7b8e0403167f8fef70f3&redirect_uri=http://localhost:8887/callback&scope=user&state=1")
-                        window.localStorage.setItem("closable","true");
+                        // window.open("https://github.com/login/oauth/authorize?client_id=7b8e0403167f8fef70f3&redirect_uri=http://localhost:8887/callback/github&scope=user&state=1")
+                        // window.localStorage.setItem("closable","true");
                     }
 
                 }
@@ -57,9 +59,9 @@ function comment2target(targetId, type, content) {
                     if (param.code == 2003) {
                         var isAccept = confirm(param.message);
                         if (isAccept) {
-                            window.open("https://github.com/login/oauth/authorize?client_id=cd40e3e26ced2f5e81d0&redirect_uri=http://localhost:8887/callback&scope=user&state=1");
+                            // window.open("https://github.com/login/oauth/authorize?client_id=cd40e3e26ced2f5e81d0&redirect_uri=http://localhost:8887/callback&scope=user&state=1");
                             // window.open("https://github.com/login/oauth/authorize");
-                            window.localStorage.setItem("closeable", "true")
+                            // window.localStorage.setItem("closeable", "true")
                         }
                     } else {
                         alert(param.message);

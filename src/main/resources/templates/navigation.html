@@ -44,12 +44,30 @@
                     </li>
                     <li th:if="${session.user == null}">
                         <!-- 登录功能的第一步 -->
-                        <a href="https://github.com/login/oauth/authorize?client_id=7b8e0403167f8fef70f3&redirect_uri=http://localhost:8887/callback&scope=user&state=1">登录</a>
+                        <a data-toggle="modal" data-target="#myModal">登录</a>
                     </li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document" style="margin-top: 200px;width: 300px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">登录注册</h4>
+                </div>
+                <div class="modal-body" style="text-align: center">
+                    <a href="https://github.com/login/oauth/authorize?client_id=7b8e0403167f8fef70f3&redirect_uri=http://localhost:8887/callback/github&scope=user&state=1"><img src="/images/github.png"></a>
+                    <a href="https://gitee.com/oauth/authorize?client_id=88fb5e6efec699811468006728a894de91412a2df7661bea29dc86f35d1979cc&redirect_uri=http://localhost:8887/callback/gitee&response_type=code"><img src="/images/gitee.png"></a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>

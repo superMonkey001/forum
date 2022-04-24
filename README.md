@@ -8,7 +8,11 @@ idea
 前端:thymeleaf
 
 ## 插件
-lombok
+lombok  
+mybatis generator分页插件：
+```xml
+<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
+```
 
 ## 脚本
 ```sql

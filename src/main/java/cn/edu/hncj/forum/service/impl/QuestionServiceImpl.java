@@ -172,6 +172,7 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    @Override
     public void incView(Long id) {
         Question question = new Question();
         question.setId(id);

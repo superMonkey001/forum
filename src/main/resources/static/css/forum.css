@@ -46,3 +46,18 @@ body {
     float: right;
     margin-bottom: 10px;
 }
+
+.menu {
+    color: #999;
+    margin-top: 5px;
+}
+
+.menu .icon {
+    margin-right: 6px;
+    font-size: 15px;
+}
+
+.menu .icon:hover {
+    cursor: pointer;
+    color: #c1e2b3;
+}

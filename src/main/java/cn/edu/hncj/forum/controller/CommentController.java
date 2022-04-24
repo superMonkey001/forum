@@ -1,10 +1,8 @@
 package cn.edu.hncj.forum.controller;
 
-import cn.edu.hncj.forum.dto.CommentDTO;
+import cn.edu.hncj.forum.dto.CommentParamDTO;
 import cn.edu.hncj.forum.dto.ResultDTO;
 import cn.edu.hncj.forum.exception.CustomizeErrorCode;
-import cn.edu.hncj.forum.exception.CustomizeException;
-import cn.edu.hncj.forum.mapper.CommentMapper;
 import cn.edu.hncj.forum.model.Comment;
 import cn.edu.hncj.forum.model.User;
 import cn.edu.hncj.forum.service.CommentService;
@@ -28,7 +26,7 @@ public class CommentController {
 
     @ResponseBody
     @PostMapping("/comment")
-    public ResultDTO comment(@RequestBody CommentDTO commentDTO,
+    public ResultDTO comment(@RequestBody CommentParamDTO commentParamDTO,
                           HttpServletRequest request) {
 
         HttpSession session = request.getSession();
@@ -41,9 +39,9 @@ public class CommentController {
         comment.setCommentator(user.getId());
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(System.currentTimeMillis());
-        comment.setContent(commentDTO.getContent());
-        comment.setParentId(commentDTO.getParentId());
-        comment.setType(commentDTO.getType());
+        comment.setContent(commentParamDTO.getContent());
+        comment.setParentId(commentParamDTO.getParentId());
+        comment.setType(commentParamDTO.getType());
         comment.setLikeCount(0L);
         commentService.insert(comment);
         return ResultDTO.okOf();

@@ -19,7 +19,7 @@ public class GiteeUserStrategy implements UserStrategy{
         accessTokenDTO.setCode(code);
         accessTokenDTO.setState(state);
         String accessToken = giteeProvider.getAccessToken(accessTokenDTO);
-        GiteeUser giteeUser = giteeProvider.getGithubUser(accessToken);
+        GiteeUser giteeUser = giteeProvider.getGiteeUser(accessToken);
         LoginUserInfo loginUserInfo = new LoginUserInfo();
         BeanUtils.copyProperties(giteeUser,loginUserInfo);
         return loginUserInfo;

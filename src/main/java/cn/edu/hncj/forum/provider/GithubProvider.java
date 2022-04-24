@@ -74,7 +74,7 @@ public class GithubProvider {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //通过参数accessToken找不到用户信息；
+        // 通过参数accessToken找不到用户信息；
         return null;
     }
 }

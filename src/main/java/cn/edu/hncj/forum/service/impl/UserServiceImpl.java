@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createOrUpdate(User user) {
         UserExample userExample = new UserExample();
-        userExample.createCriteria().andAccountIdEqualTo(user.getAccountId());
+        userExample.createCriteria().andAccountIdEqualTo(user.getAccountId()).andTypeEqualTo(user.getType());
         List<User> users = userMapper.selectByExample(userExample);
         User dbUser = null;
         if(users != null && users.size() != 0) {
