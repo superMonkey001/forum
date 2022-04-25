@@ -19,9 +19,18 @@ public class ResultDTO<T> {
         resultDTO.setMessage(message);
         return resultDTO;
     }
+
     public static ResultDTO errorOf(CustomizeErrorCode customizeErrorCode) {
         return ResultDTO.errorOf(customizeErrorCode.getCode(),customizeErrorCode.getMessage());
     }
+
+    public static ResultDTO errorOf(CustomizeException ex) {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(ex.getCode());
+        resultDTO.setMessage(ex.getMessage());
+        return resultDTO;
+    }
+
     public static ResultDTO okOf() {
         ResultDTO resultDTO = new ResultDTO();
         resultDTO.setCode(200);
@@ -29,10 +38,11 @@ public class ResultDTO<T> {
         return resultDTO;
     }
 
-    public static ResultDTO errorOf(CustomizeException ex) {
+    public static <T> ResultDTO okOf(T t) {
         ResultDTO resultDTO = new ResultDTO();
-        resultDTO.setCode(ex.getCode());
-        resultDTO.setMessage(ex.getMessage());
+        resultDTO.setCode(200);
+        resultDTO.setMessage("请求成功");
+        resultDTO.setData(t);
         return resultDTO;
     }
 }

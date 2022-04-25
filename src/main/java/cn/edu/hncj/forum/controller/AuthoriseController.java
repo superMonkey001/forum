@@ -1,9 +1,6 @@
 package cn.edu.hncj.forum.controller;
 
-import cn.edu.hncj.forum.dto.AccessTokenDTO;
-import cn.edu.hncj.forum.provider.dto.GithubUser;
 import cn.edu.hncj.forum.model.User;
-import cn.edu.hncj.forum.provider.GithubProvider;
 import cn.edu.hncj.forum.service.UserService;
 import cn.edu.hncj.forum.strategy.LoginUserInfo;
 import cn.edu.hncj.forum.strategy.UserStrategy;
@@ -86,7 +83,7 @@ public class AuthoriseController {
     public String callback2(@PathVariable("type") String type,
                             @RequestParam String code,
                             @RequestParam(name = "state",required = false) String state,
-                            HttpServletResponse response, HttpServletRequest request) {
+                            HttpServletResponse response) {
         UserStrategy strategy = userStrategyFactory.getStrategy(type);
         LoginUserInfo loginUser = strategy.getUser(code, state);
         if (loginUser != null && loginUser.getId() != null) {

@@ -1,43 +1,51 @@
-function post() {
-    var questionId = $("#question_id").val();
-    var content = $("#comment_content").val();
-    $.ajax({
-        type: "POST",
-        url: "/comment",
-        // 请求参数的格式
-        contentType: 'application/json',
-        // '{"parentId": 1,"content": "hello, world","type": 1}'
-        data: JSON.stringify({
-            "parentId": questionId,
-            "content": content,
-            "type": 1
-        }),
-        success: function (response) {
-            if (response.code == 200) {
-                $("#comment_content").val("");
-                location.reload();
-            } else {
-                // 如果用户未登录
-                if (response.code == 2003) {
-                    var isAccept = confirm(response.message);
-                    if (isAccept) {
-                        $('#myModal').modal({});
-                        // 打开一个新的页面
-                        // window.open("https://github.com/login/oauth/authorize?client_id=7b8e0403167f8fef70f3&redirect_uri=http://localhost:8887/callback/github&scope=user&state=1")
-                        // window.localStorage.setItem("closable","true");
-                    }
+// function post() {
+//     var questionId = $("#question_id").val();
+//     var content = $("#comment_content").val();
+//
+//     if (!content) {
+//         alert("不能回复空");
+//     }
+//
+//     $.ajax({
+//         type: "POST",
+//         url: "/comment",
+//         // 请求参数的格式
+//         contentType: 'application/json',
+//         // '{"parentId": 1,"content": "hello, world","type": 1}'
+//         data: JSON.stringify({
+//             "parentId": questionId,
+//             "content": content,
+//             "type": 1
+//         }),
+//         success: function (response) {
+//             if (response.code == 200) {
+//                 $("#comment_content").val("");
+//                 location.reload();
+//             } else {
+//                 // 如果用户未登录
+//                 if (response.code == 2003) {
+//                     var isAccept = confirm(response.message);
+//                     if (isAccept) {
+//                         $('#myModal').modal({});
+//                         // 打开一个新的页面
+//                         // window.open("https://github.com/login/oauth/authorize?client_id=7b8e0403167f8fef70f3&redirect_uri=http://localhost:8887/callback/github&scope=user&state=1")
+//                         // window.localStorage.setItem("closable","true");
+//                     }
+//
+//                 }
+//             }
+//         },
+//         // success回调函数的response参数的格式
+//         dataType: "json"
+//     });
+// }
 
-                }
-            }
-        },
-        // success回调函数的response参数的格式
-        dataType: "json"
-    });
-}
+
 
 //抽取方法
-function comment2target(targetId, type, content) {
-    if (!content) {
+function comment2Parent(parentId, type, content) {
+    // 如果content为nan或为全空格
+    if (!content || content.match(/^[ ]*$/)) {
         alert("不能回复空内容~~~");
         return;
     }
@@ -47,29 +55,113 @@ function comment2target(targetId, type, content) {
             url: "/comment",
             contentType: 'application/json',
             data: JSON.stringify({
-                "parentId": targetId,
+                "parentId": parentId,
                 "content": content,
                 "type": type
             }),
-            success: function (param) {
-                if (param.code == 200) {
+            success: function (response) {
+                if (response.code == 200) {
                     $("#comment_content").val("");
                     location.reload();
                 } else {
-                    if (param.code == 2003) {
-                        var isAccept = confirm(param.message);
+                    if (response.code == 2003) {
+                        var isAccept = confirm(response.message);
                         if (isAccept) {
+                            $('#myModal').modal({});
                             // window.open("https://github.com/login/oauth/authorize?client_id=cd40e3e26ced2f5e81d0&redirect_uri=http://localhost:8887/callback&scope=user&state=1");
                             // window.open("https://github.com/login/oauth/authorize");
                             // window.localStorage.setItem("closeable", "true")
                         }
                     } else {
-                        alert(param.message);
+                        alert(response.message);
                     }
                 }
-                console.log(param);
+                console.log(response);
             },
             dataType: "json"
         }
     )
+}
+
+/*提交回复*/
+function post() {
+    var questionId = $("#question_id")[0].value;
+    var commentContent = $("#comment_content").val();
+    comment2Parent(questionId, 1, commentContent);
+}
+
+
+function comment(e) {
+    var commentId = e.getAttribute("data-id");
+    var content = $("#input-" + commentId).val();
+    comment2Parent(commentId, 2, content);
+}
+
+
+/*展开二级评论*/
+function collapseComments(e) {
+    var id = e.getAttribute("data-id");
+    var comments = $("#comment-" + id);
+    // 获取一下二级评论的展开状态
+    var collapse = e.getAttribute("data-collapse");
+
+    // 折叠二级评论
+    if (collapse) {
+        comments.removeClass("in");
+        e.removeAttribute("data-collapse");
+        e.classList.remove("active");
+    } else {
+        var subCommentContainer = $("#comment-" + id);
+        // 如果没有评论的话
+        if (subCommentContainer.children().length != 1) {
+            // 展开二级评论
+            comments.addClass("in");
+            // 标记二级评论为展开状态
+            e.setAttribute("data-collapse", true);
+            e.classList.add("active");
+            $("#input-" + id).val("");
+        } else {
+            $.getJSON("/comment/" + id, function (data) {
+                $.each(data.data.reverse(), function (index, comment) {
+                    var mediaLeftElement = $("<div/>", {
+                        "class": "media-left"
+                    }).append($("<img/>", {
+                        "class": "media-object img-rounded",
+                        "src": comment.user.avatarUrl
+                    }));
+
+                    var mediaBodyElement = $("<div/>", {
+                        "class": "media-body"
+                    }).append($("<h5/>", {
+                        "class": "media-heading",
+                        "html": comment.user.name
+                    })).append($("<div/>", {
+                        "html": comment.content
+                    })).append($("<div/>", {
+                        "class": "menu"
+                    }).append($("<span/>", {
+                        "class": "pull-right",
+                        // moment.js工具格式化
+                        "html": moment(comment.gmtCreate).format('YYYY-MM-DD')
+                    })));
+
+                    var mediaElement = $("<div/>", {
+                        "class": "media comment-separate"
+                    }).append(mediaLeftElement).append(mediaBodyElement);
+
+                    var commentElement = $("<div/>", {
+                        "class": "col-lg-12 col-md-12 col-sm-12 col-xs-12 comments"
+                    }).append(mediaElement);
+
+                    subCommentContainer.prepend(commentElement);
+                });
+                // 展开二级评论
+                comments.addClass("in");
+                e.setAttribute("data-collapse", true);
+                // 标记二级评论展开状态
+                e.classList.add("active");
+                $("#input-" + id).val("");
+            });
+        }
+    }
 }

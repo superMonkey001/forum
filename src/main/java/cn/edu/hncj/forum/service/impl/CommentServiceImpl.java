@@ -4,10 +4,7 @@ import cn.edu.hncj.forum.dto.CommentReturnDTO;
 import cn.edu.hncj.forum.enums.CommentTypeEnum;
 import cn.edu.hncj.forum.exception.CustomizeErrorCode;
 import cn.edu.hncj.forum.exception.CustomizeException;
-import cn.edu.hncj.forum.mapper.CommentMapper;
-import cn.edu.hncj.forum.mapper.QuestionExtMapper;
-import cn.edu.hncj.forum.mapper.QuestionMapper;
-import cn.edu.hncj.forum.mapper.UserMapper;
+import cn.edu.hncj.forum.mapper.*;
 import cn.edu.hncj.forum.model.Comment;
 import cn.edu.hncj.forum.model.CommentExample;
 import cn.edu.hncj.forum.model.Question;
@@ -29,6 +26,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private CommentMapper commentMapper;
+
+    @Autowired
+    private CommentExtMapper commentExtMapper;
 
     @Autowired
     private QuestionMapper questionMapper;
@@ -61,7 +61,14 @@ public class CommentServiceImpl implements CommentService {
             if (dbComment == null) {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             } else {
+                // 向数据库中插入这条评论的数据
                 commentMapper.insert(comment);
+                // 为父级评论的评论数加一
+                Comment parentComment = new Comment();
+                parentComment.setId(comment.getParentId());
+                // 现阶段设置成1，以后添加缓存功能的时候，可能会将参数改大.(set COMMENT_COUNT = COMMENT_COUNT + #{commentCount})
+                parentComment.setCommentCount(1);
+                commentExtMapper.incCommentCount(parentComment);
             }
         }// 如果评论的是问题
         else if (commentType.equals(CommentTypeEnum.QUESTION.getType())) {
@@ -78,9 +85,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentReturnDTO> listByParentId(Long parentId) {
+    public List<CommentReturnDTO> listByParentId(Long parentId, CommentTypeEnum type) {
         CommentExample commentExample = new CommentExample();
-        commentExample.createCriteria().andParentIdEqualTo(parentId);
+        // 注意判断当前评论的type是1（评论Question），还是2（评论Comment）
+        commentExample.createCriteria().andParentIdEqualTo(parentId).andTypeEqualTo(type.getType());
+        commentExample.setOrderByClause("gmt_create desc");
         List<Comment> comments = commentMapper.selectByExample(commentExample);
         List<CommentReturnDTO> commentReturnDTOS = copyList(comments);
         return commentReturnDTOS;

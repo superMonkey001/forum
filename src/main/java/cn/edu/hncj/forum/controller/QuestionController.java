@@ -2,6 +2,7 @@ package cn.edu.hncj.forum.controller;
 
 import cn.edu.hncj.forum.dto.CommentReturnDTO;
 import cn.edu.hncj.forum.dto.QuestionDTO;
+import cn.edu.hncj.forum.enums.CommentTypeEnum;
 import cn.edu.hncj.forum.service.CommentService;
 import cn.edu.hncj.forum.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class QuestionController {
         questionService.incView(id);
 
         // 查询评论
-        List<CommentReturnDTO> commentDTOS = commentService.listByParentId(id);
+        List<CommentReturnDTO> commentDTOS = commentService.listByParentId(id, CommentTypeEnum.QUESTION);
         model.addAttribute("comments",commentDTOS);
         return "question";
     }
