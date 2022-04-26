@@ -13,12 +13,39 @@
 <body>
 
 <script type="text/javascript">
+    /**
+     * 判断数组中是否含有重复的元素，主要用来判断标签输入框中是否有重复的标签
+     * 以数组值为键，持续向一个对象里面加值，如果在加值之前就发现这个属性在对象中已经存在，那么他就是重复的
+     * @param arr
+     * @returns {boolean}
+     */
+    function isRepeat(arr){
+        var hash = {};
+        for(var i in arr) {
+            if(hash[arr[i]])
+                return true;
+            hash[arr[i]] = true;
+        }
+        return false;
+    }
+
+    /**
+     * 入口函数
+     */
     $(function () {
-        // 追加标签事件
-        $("span span").click(function () {
+        // 追加标签点击事件
+        $(".hoverTag").click(function () {
+            // 标签输入框中的内容
             var tagText = $("#tag").val();
-            // 如果input里面没有重复标签的话
-            if (tagText.indexOf($(this).text()) == -1) {
+            
+            // 把标签输入框中的内容以逗号分隔为数组
+            var tags = tagText.split(',');
+            // 把当前选中的标签加载数组的末尾
+            tags.push($(this).text());
+
+            // 原始的判断条件：if (tagText.indexOf($(this).text()) == -1) {
+            // 如果标签输入框中没有当前选中的标签（即数组中没有重复的元素）
+            if (!isRepeat(tags)) {
                 // 如果input里有内容
                 if (tagText) {
                     tagText = tagText + ',' + $(this).text();
@@ -34,6 +61,9 @@
                 $("#tagTab").css("display", "block");
             }
         });
+        $("#closeTags").click(function () {
+                $("#tagTab").css("display", "none");
+        })
     })
 </script>
 
@@ -68,11 +98,12 @@
                 </div>
 
                 <!--标签选择-->
-                <div id="tagTab" style="display: none" class="public-tag-tab">
+                <div id="tagTab" style="display: none;border: 1px solid #AAA;border-radius: 5px;" class="public-tag-tab">
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" th:each="tabTag,stat:${tags}" th:class="${stat.first ? 'active':''}">
                             <a th:href="${'#'+tabTag.categoryName}" aria-controls="home" role="tab" data-toggle="tab">[[${tabTag.categoryName}]]</a>
                         </li>
+                        <input id="closeTags" class="pull-right" type="button" th:value="X" style="color: black;border-radius: 50%"/>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" th:id="${tabTag.categoryName}" th:each="tabTag,stat:${tags}"
@@ -86,7 +117,7 @@
                 </div>
 
                 <!--错误提示以及发布按钮-->
-                <div class="container-fluid main ">
+                <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-9 col-md-9 col-sm-10 col-xs-12">
                             <div class="alert alert-danger col-lg-12 col-md-12 col-sm-12 col-xs-12"
@@ -95,7 +126,7 @@
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-2 col-xs-12">
-                            <button type="submit" class="btn btn-success btn-publish pull-right">
+                            <button type="submit" class="btn btn-success btn-publish pull-right" style="margin: 20px 0">
                                 发布
                             </button>
                         </div>
