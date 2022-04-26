@@ -1,5 +1,6 @@
 package cn.edu.hncj.forum.service.impl;
 
+import cn.edu.hncj.forum.dto.CommentReturnDTO;
 import cn.edu.hncj.forum.dto.PaginationDTO;
 import cn.edu.hncj.forum.dto.QuestionDTO;
 import cn.edu.hncj.forum.exception.CustomizeErrorCode;
@@ -11,13 +12,16 @@ import cn.edu.hncj.forum.model.Question;
 import cn.edu.hncj.forum.model.QuestionExample;
 import cn.edu.hncj.forum.model.User;
 import cn.edu.hncj.forum.service.QuestionService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
@@ -62,7 +66,10 @@ public class QuestionServiceImpl implements QuestionService {
 
         Integer offset = size * (page - 1);
 
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.setOrderByClause("gmt_create desc");
+
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOS = new ArrayList<>();
 
         for (Question question : questions) {
@@ -179,6 +186,37 @@ public class QuestionServiceImpl implements QuestionService {
         // 做缓存用?
         question.setViewCount(1);
         questionExtMapper.incView(question);
+    }
+
+    @Override
+    public List<QuestionDTO> selectRelated(QuestionDTO queryDTO) {
+
+        if(StringUtils.isBlank(queryDTO.getTag()))
+        {
+            return new ArrayList<>();
+        }
+
+        // 例：queryDTO.getTag():"springboot,spring,java"
+        // tags["springboot","spring","java"]
+        String[] tags = StringUtils.split(queryDTO.getTag(), ",");
+
+        // 作用是把tags重新组合成形如：“springboot|spring|java”这种形式的sql语句的正则表达式
+        String regexpTag = Arrays.stream(tags).collect(Collectors.joining("|"));
+
+        // 封装question做为sql语句的参数
+        Question question = new Question();
+        question.setId(queryDTO.getId());
+        question.setTag(regexpTag);
+
+        // 执行SQL，正则查询相关问题
+        List<Question> questions = questionExtMapper.selectRelated(question);
+
+        // 封装questionDTOS并返回
+        List<QuestionDTO> questionDTOS = questions.stream().map(q -> {
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(q,questionDTO);
+            return questionDTO;}).collect(Collectors.toList());
+        return questionDTOS;
     }
 
     /**

@@ -19,4 +19,11 @@ public interface QuestionExtMapper {
      * 通过问题id,增加评论数
      */
     int incCommentCount(Question question);
+
+    /**
+     * 通过当前问题，找出相关问题
+     * @param question 当前问题
+     * @return 相关问题
+     */
+    List<Question> selectRelated(Question question);
 }

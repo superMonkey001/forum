@@ -1,8 +1,11 @@
 package cn.edu.hncj.forum.service;
 
+import cn.edu.hncj.forum.dto.CommentReturnDTO;
 import cn.edu.hncj.forum.dto.PaginationDTO;
 import cn.edu.hncj.forum.dto.QuestionDTO;
 import cn.edu.hncj.forum.model.Question;
+
+import java.util.List;
 
 
 public interface QuestionService {
@@ -30,4 +33,11 @@ public interface QuestionService {
      * 根据问题id增加阅读数
      */
     void incView(Long id);
+
+    /**
+     * 通过当前问题，查出所有的相关问题
+     * @param questionDTO 当前问题
+     * @return 相关问题
+     */
+    List<QuestionDTO> selectRelated(QuestionDTO questionDTO);
 }

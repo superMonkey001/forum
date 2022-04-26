@@ -40,6 +40,9 @@
 //     });
 // }
 
+var addCookie = function (name, value) {
+    document.cookie = name + "=" + value + ";path=/";
+};
 
 
 //抽取方法
@@ -64,9 +67,13 @@ function comment2Parent(parentId, type, content) {
                     $("#comment_content").val("");
                     location.reload();
                 } else {
+                    // 需要登录
                     if (response.code == 2003) {
                         var isAccept = confirm(response.message);
                         if (isAccept) {
+                            // 添加cookie
+                            addCookie("commentButNoLogin",parentId);
+                            // 打开登录界面
                             $('#myModal').modal({});
                             // window.open("https://github.com/login/oauth/authorize?client_id=cd40e3e26ced2f5e81d0&redirect_uri=http://localhost:8887/callback&scope=user&state=1");
                             // window.open("https://github.com/login/oauth/authorize");
@@ -97,9 +104,18 @@ function comment(e) {
     comment2Parent(commentId, 2, content);
 }
 
+// 是否已经点开了一个二级评论框
+var opening = false;
+
+// 上一个点击的二级评论的弹窗Dom对象
+var pre;
+
+// 上一个点击的评论图标对象
+var preCommentSpan;
 
 /*展开二级评论*/
 function collapseComments(e) {
+
     var id = e.getAttribute("data-id");
     var comments = $("#comment-" + id);
     // 获取一下二级评论的展开状态
@@ -110,7 +126,17 @@ function collapseComments(e) {
         comments.removeClass("in");
         e.removeAttribute("data-collapse");
         e.classList.remove("active");
-    } else {
+    } // 展开二级评论
+    else {
+        debugger;
+        // 是否已经点开了一个二级评论框
+        // 如果打开了，就关闭已经打开的二级评论框（为了保证只有一个二级评论框展示）
+        if (opening) {
+            pre.removeClass("in");
+            preCommentSpan.removeAttribute("data-collapse");
+            preCommentSpan.classList.remove("active");
+            opening = false;
+        }
         var subCommentContainer = $("#comment-" + id);
         // 如果没有评论的话
         if (subCommentContainer.children().length != 1) {
@@ -157,11 +183,20 @@ function collapseComments(e) {
                 });
                 // 展开二级评论
                 comments.addClass("in");
+
+
+                // 把当前的评论图标元素设置为打开状态
                 e.setAttribute("data-collapse", true);
-                // 标记二级评论展开状态
+                // 把当前的评论图标元素设置为选中状态
                 e.classList.add("active");
                 $("#input-" + id).val("");
             });
         }
     }
+    // 设置已经打开了一个二级评论弹窗
+    opening = !collapse;
+    // 当前二级评论弹窗元素就是下一个元素的前一个元素
+    pre = comments;
+    // 当前二级评论图标元素就是下一个元素的前一个元素
+    preCommentSpan = e;
 }

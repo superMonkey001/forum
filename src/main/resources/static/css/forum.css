@@ -8,7 +8,6 @@ body {
 }
 
 .btn-publish {
-    float: right;
     margin-bottom: 15px;
 }
 
@@ -53,6 +52,15 @@ body {
     padding-bottom: 10px
 }
 
+/*二级评论*/
+.sub-comments
+{
+    border-radius:5px;
+    margin-top: 10px;
+    border: 1px solid #eee;
+    padding-top: 15px;
+    margin-bottom: 15px;
+}
 
 
 
@@ -79,11 +87,33 @@ body {
     color: #499ef3;
 }
 
-.sub-comments
-{
-    border-radius:5px;
-    margin-top: 10px;
-    border: 1px solid #eee;
-    padding-top: 15px;
-    margin-bottom: 15px;
+
+
+/*标签*/
+.question-tag{
+    font-size: 100%;
+    font-weight: 500;
 }
+/*标签上的光标手*/
+.hoverTag:hover{
+    cursor: pointer;
+    color: #ffff00;
+}
+
+
+
+
+.public-tag-tab .label-info
+{
+    margin-right: 10px;
+    white-space: normal;
+    margin: 5px 5px;
+    display: inline-block;
+}
+
+/*相关问题*/
+.related-question
+{
+    list-style: none;
+}
+

@@ -5,6 +5,7 @@ import cn.edu.hncj.forum.service.UserService;
 import cn.edu.hncj.forum.strategy.LoginUserInfo;
 import cn.edu.hncj.forum.strategy.UserStrategy;
 import cn.edu.hncj.forum.strategy.UserStrategyFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -83,7 +84,8 @@ public class AuthoriseController {
     public String callback2(@PathVariable("type") String type,
                             @RequestParam String code,
                             @RequestParam(name = "state",required = false) String state,
-                            HttpServletResponse response) {
+                            HttpServletResponse response,
+                            HttpServletRequest request) {
         UserStrategy strategy = userStrategyFactory.getStrategy(type);
         LoginUserInfo loginUser = strategy.getUser(code, state);
         if (loginUser != null && loginUser.getId() != null) {
@@ -104,7 +106,23 @@ public class AuthoriseController {
             // 用户可以通过存在浏览器中里的token信息（后端IndexController通过token查询数据库）直接登录。而不用手动点击登录按钮
             Cookie tokenCookie = new Cookie("token", token);
             tokenCookie.setPath("/");
+            Cookie[] cookies = request.getCookies();
             response.addCookie(tokenCookie);
+
+            // 如果是从评论但是没有登录过来的请求
+            if (cookies != null && cookies.length != 0) {
+                for (Cookie cookie : cookies) {
+                    if ("commentButNoLogin".equals(cookie.getName())) {
+                        // 问题的id
+                        String id = cookie.getValue();
+                        Cookie commentButNoLogin = new Cookie("commentButNoLogin", "");
+                        cookie.setMaxAge(0);
+                        cookie.setPath("/");
+                        response.addCookie(commentButNoLogin);
+                        return "redirect:/question/" + id;
+                    }
+                }
+            }
             return "redirect:/";
         } else {
             // 登入失败，重新登入。执行到这的登入失败只有一种情况，就是超时请求。

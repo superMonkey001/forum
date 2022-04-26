@@ -1,5 +1,8 @@
 package cn.edu.hncj.forum.model;
 
+/**
+ * @author FanJian
+ */
 public class Comment {
     /**
      *

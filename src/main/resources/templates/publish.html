@@ -8,8 +8,36 @@
     <link rel="stylesheet" href="/css/forum.css">
     <script src="/js/jquery-3.6.0.min.js"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/js/forum.js" type="application/javascript"></script>
 </head>
 <body>
+
+<script type="text/javascript">
+    $(function () {
+        // 追加标签事件
+        $("span span").click(function () {
+            var tagText = $("#tag").val();
+            // 如果input里面没有重复标签的话
+            if (tagText.indexOf($(this).text()) == -1) {
+                // 如果input里有内容
+                if (tagText) {
+                    tagText = tagText + ',' + $(this).text();
+                } else {
+                    tagText = $(this).text();
+                }
+                $("#tag").val(tagText);
+            }
+        });
+        $("#tag").click(function () {
+            var isNone = $("#tagTab").css("display", "none");
+            if (isNone) {
+                $("#tagTab").css("display", "block");
+            }
+        });
+    })
+</script>
+
+
 <div th:insert="~{navigation :: navi}"></div>
 <!--  发布框以及发布指南  -->
 <div class="container-fluid main">
@@ -23,18 +51,41 @@
                 <div class="form-group">
                     <label for="title">问题标题（简单扼要）：</label>
                     <input type="text" class="form-control" id="title" name="title" placeholder="问题标题"
-                           th:value="${title}">
+                           th:value="${title}" autocapitalize="off">
                 </div>
                 <div class="form-group" id="question-editor">
                     <label for="description">问题补充</label>
                     <textarea class="form-control" name="description"
-                              id="description" cols="30" rows="10" th:text="${description}"></textarea>
+                              id="description" cols="30" rows="10" th:text="${description}" autocapitalize="off">
+                    </textarea>
                 </div>
+
+                <!--标签输入框-->
                 <div class="form-group">
-                    <label for="tag">标记</label>
+                    <label for="tag">标签</label>
                     <input type="text" name="tag"  class="form-control" id="tag"
-                           placeholder="输入标签，以，隔开" autocomplete="off" th:value="${tag}">
+                           placeholder="输入标签，以，隔开" autocomplete="off" th:value="${tag}" autocapitalize="off">
                 </div>
+
+                <!--标签选择-->
+                <div id="tagTab" style="display: none" class="public-tag-tab">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" th:each="tabTag,stat:${tags}" th:class="${stat.first ? 'active':''}">
+                            <a th:href="${'#'+tabTag.categoryName}" aria-controls="home" role="tab" data-toggle="tab">[[${tabTag.categoryName}]]</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" th:id="${tabTag.categoryName}" th:each="tabTag,stat:${tags}"
+                             th:class="${stat.first ? 'active tab-pane': 'tab-pane'}">
+                            <span class="label label-info question-tag" th:each="tag:${tabTag.tags}">
+                                <span class="glyphicon glyphicon-tags"></span>
+                                <span class="hoverTag">[[${tag}]]</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!--错误提示以及发布按钮-->
                 <div class="container-fluid main ">
                     <div class="row">
                         <div class="col-lg-9 col-md-9 col-sm-10 col-xs-12">
@@ -44,7 +95,7 @@
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-2 col-xs-12">
-                            <button type="submit" class="btn btn-success btn-publish ">
+                            <button type="submit" class="btn btn-success btn-publish pull-right">
                                 发布
                             </button>
                         </div>

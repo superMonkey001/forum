@@ -1,11 +1,13 @@
 package cn.edu.hncj.forum.controller;
 
+import cn.edu.hncj.forum.cache.TagCache;
 import cn.edu.hncj.forum.dto.QuestionDTO;
 import cn.edu.hncj.forum.mapper.QuestionMapper;
 import cn.edu.hncj.forum.mapper.UserMapper;
 import cn.edu.hncj.forum.model.Question;
 import cn.edu.hncj.forum.model.User;
 import cn.edu.hncj.forum.service.QuestionService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,30 +19,45 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+/**
+ * @author FanJian
+ */
 @Controller
 public class PublishController {
     @Autowired
     private QuestionService questionService;
 
+    /**
+     * 通过编辑按钮完成更新后，发布
+     *
+     * @param id 问题的id
+     * @return 返回页面
+     */
     @GetMapping("/publish/{id}")
-    public String publish(@PathVariable("id") Long id,Model model) {
+    public String publish(@PathVariable("id") Long id, Model model) {
         QuestionDTO question = questionService.findById(id);
         // 第一时间把用户传入的信息写入model传递给publish.html，主要是用来做提交失败后，回显的功能
-        model.addAttribute("title",question.getTitle());
-        model.addAttribute("description",question.getDescription());
-        model.addAttribute("tag",question.getTag());
-
+        model.addAttribute("title", question.getTitle());
+        model.addAttribute("description", question.getDescription());
+        model.addAttribute("tag", question.getTag());
+        model.addAttribute("tags", TagCache.get());
         // 隐藏的id,用来判断问题是否已经存在
-        model.addAttribute("id",question.getId());
+        model.addAttribute("id", question.getId());
 
         return "publish";
     }
 
     @GetMapping("/publish")
-    public String publish() {
+    public String publish(Model model) {
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
+    /**
+     * 完成问题的发布
+     *
+     * @param id 问题的id
+     */
     @PostMapping("/publish")
     public String doPublish(@RequestParam("title") String title,
                             @RequestParam("description") String description,
@@ -50,29 +67,36 @@ public class PublishController {
                             Model model) {
 
         // 第一时间把用户传入的信息写入model传递给publish.html，主要是用来做提交失败后，回显的功能
-        model.addAttribute("title",title);
-        model.addAttribute("description",description);
-        model.addAttribute("tag",tag);
+        model.addAttribute("title", title);
+        model.addAttribute("description", description);
+        model.addAttribute("tag", tag);
+        model.addAttribute("tags", TagCache.get());
 
         // 前端的写入校验。
-        if(title == null || "".equals(title)) {
-            model.addAttribute("error","标题不能为空");
+        if (title == null || "".equals(title)) {
+            model.addAttribute("error", "标题不能为空");
             return "publish";
         }
-        if(description == null || "".equals(description)) {
-            model.addAttribute("error","问题描述不能为空");
+        if (description == null || "".equals(description)) {
+            model.addAttribute("error", "问题描述不能为空");
             return "publish";
         }
-        if(tag == null || "".equals(tag)) {
-            model.addAttribute("error","标签不能为空");
+        if (tag == null || "".equals(tag)) {
+            model.addAttribute("error", "标签不能为空");
             return "publish";
         }
+        String invalid = TagCache.filterInvalid(tag);
+        if (StringUtils.isBlank(invalid)) {
+            model.addAttribute("error", "输入了非法标签" + invalid);
+            return "publish";
+        }
+
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
-        if(user == null) {
-            model.addAttribute("error","用户未登录");
+        if (user == null) {
+            model.addAttribute("error", "用户未登录");
             return "publish";
         }
 
