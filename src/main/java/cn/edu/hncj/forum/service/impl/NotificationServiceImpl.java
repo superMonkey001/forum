@@ -47,7 +47,6 @@ public class NotificationServiceImpl implements NotificationService {
         Integer totalPage;
         // 一共有多少问题
         NotificationExample notificationExample = new NotificationExample();
-        notificationExample.setOrderByClause("gmt_create desc");
         notificationExample.createCriteria().andReceiverEqualTo(id);
         Integer totalCount = (int) notificationMapper.countByExample(notificationExample);
         if (totalCount % size == 0) {
@@ -66,7 +65,8 @@ public class NotificationServiceImpl implements NotificationService {
 
         Integer offset = size * (page - 1);
         NotificationExample notificationExample1 = new NotificationExample();
-        notificationExample.createCriteria().andReceiverEqualTo(id);
+        notificationExample1.createCriteria().andReceiverEqualTo(id);
+        notificationExample1.setOrderByClause("gmt_create desc");
         List<Notification> notifications = notificationMapper.selectByExampleWithRowbounds(notificationExample1, new RowBounds(offset, size));
 
         // 如果没有通知，那么就没必要进行下面的封装

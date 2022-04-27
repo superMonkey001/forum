@@ -98,7 +98,6 @@ public class QuestionServiceImpl implements QuestionService {
         Integer totalPage;
         // 一共有多少问题
         QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause("gmt_create desc");
         questionExample.createCriteria().andCreatorEqualTo(id);
         Integer totalCount = (int)questionMapper.countByExample(questionExample);
         if (totalCount % size == 0) {
@@ -118,6 +117,7 @@ public class QuestionServiceImpl implements QuestionService {
         Integer offset = size * (page - 1);
         QuestionExample questionExample1 = new QuestionExample();
         questionExample1.createCriteria().andCreatorEqualTo(id);
+        questionExample1.setOrderByClause("gmt_create desc");
         List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample1, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOS = new ArrayList<>();
 

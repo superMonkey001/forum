@@ -1,8 +1,10 @@
 package cn.edu.hncj.forum.interceptor;
 
+import cn.edu.hncj.forum.dto.PaginationDTO;
 import cn.edu.hncj.forum.mapper.UserMapper;
 import cn.edu.hncj.forum.model.User;
 import cn.edu.hncj.forum.model.UserExample;
+import cn.edu.hncj.forum.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -15,9 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Component
-public class LoginInterceptor implements HandlerInterceptor {
+public class SessionInterceptor implements HandlerInterceptor {
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private NotificationService notificationService;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Cookie[] cookies = request.getCookies();
@@ -32,7 +38,10 @@ public class LoginInterceptor implements HandlerInterceptor {
                     List<User> users = userMapper.selectByExample(userExample);
                     // 如果用户换了一个浏览器（重启浏览器），才会导致在有token的情况下，查询的users为null
                     if (users != null && users.size() != 0) {
-                        request.getSession().setAttribute("user", users.get(0));
+                        User loginUser = users.get(0);
+                        request.getSession().setAttribute("user", loginUser);
+                        Long unreadCount = notificationService.unreadCount(loginUser.getId());
+                        request.getSession().setAttribute("unreadCount",unreadCount);
                     }
                     break;
                 }

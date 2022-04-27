@@ -47,11 +47,9 @@ public class ProfileController {
         }// 如果用户点击的是“最新回复”
         else if ("replies".equals(action)) {
             PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
-            Long unreadCount = notificationService.unreadCount(user.getId());
             model.addAttribute("section", "replies");
             model.addAttribute("sectionName", "最新回复");
             model.addAttribute("pagination",paginationDTO);
-            model.addAttribute("unreadCount",unreadCount);
         }
 
         // user : question = 1 : n 一个用户可以有多个问题
