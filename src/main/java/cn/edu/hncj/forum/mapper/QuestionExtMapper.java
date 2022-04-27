@@ -1,5 +1,6 @@
 package cn.edu.hncj.forum.mapper;
 
+import cn.edu.hncj.forum.dto.QuestionQueryDTO;
 import cn.edu.hncj.forum.model.Question;
 import cn.edu.hncj.forum.model.QuestionExample;
 import org.apache.ibatis.annotations.Param;
@@ -26,4 +27,8 @@ public interface QuestionExtMapper {
      * @return 相关问题
      */
     List<Question> selectRelated(Question question);
+
+    Integer countBySearch(QuestionQueryDTO questionQueryDTO);
+
+    List<Question> selectBySearch(QuestionQueryDTO questionQueryDTO);
 }

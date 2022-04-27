@@ -111,9 +111,14 @@ public class CommentServiceImpl implements CommentService {
      * @param notifierName 评论人昵称
      * @param outerTitle
      * @param receiver 通知的接收者
-     * @param outerid
+     * @param outerid 问题的id
      */
     private void createNotification(Comment comment, NotificationTypeEnum notificationTypeEnum, String notifierName, String outerTitle, Long receiver, Long outerid) {
+        // 如果评论人和发布人是一个人就不用通知
+        if (comment.getCommentator().equals(receiver)) {
+            return;
+        }
+
         // 添加通知
         Notification notification = new Notification();
         notification.setGmtCreate(System.currentTimeMillis());

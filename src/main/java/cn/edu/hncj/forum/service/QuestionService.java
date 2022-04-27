@@ -1,6 +1,5 @@
 package cn.edu.hncj.forum.service;
 
-import cn.edu.hncj.forum.dto.CommentReturnDTO;
 import cn.edu.hncj.forum.dto.PaginationDTO;
 import cn.edu.hncj.forum.dto.QuestionDTO;
 import cn.edu.hncj.forum.model.Question;
@@ -10,7 +9,7 @@ import java.util.List;
 
 public interface QuestionService {
 
-    PaginationDTO list(Integer page, Integer size);
+    PaginationDTO list(String search, Integer page, Integer size);
 
     /**
      * @param id 当前用户的id

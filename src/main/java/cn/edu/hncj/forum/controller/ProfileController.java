@@ -1,6 +1,5 @@
 package cn.edu.hncj.forum.controller;
 
-import cn.edu.hncj.forum.dto.NotificationDTO;
 import cn.edu.hncj.forum.dto.PaginationDTO;
 import cn.edu.hncj.forum.model.User;
 import cn.edu.hncj.forum.service.NotificationService;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
 public class ProfileController {
@@ -40,6 +38,8 @@ public class ProfileController {
 
         // 如果用户点击的是“我的问题”
         if ("questions".equals(action)) {
+            // user : question = 1 : n 一个用户可以有多个问题
+            // 通过user的id关联到question表
             PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
             model.addAttribute("section", "questions");
             model.addAttribute("sectionName", "我的提问");
@@ -51,9 +51,6 @@ public class ProfileController {
             model.addAttribute("sectionName", "最新回复");
             model.addAttribute("pagination",paginationDTO);
         }
-
-        // user : question = 1 : n 一个用户可以有多个问题
-        // 通过user的id关联到question表
 
         return "profile";
     }

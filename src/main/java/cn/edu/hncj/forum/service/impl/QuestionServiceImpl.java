@@ -1,8 +1,8 @@
 package cn.edu.hncj.forum.service.impl;
 
-import cn.edu.hncj.forum.dto.CommentReturnDTO;
 import cn.edu.hncj.forum.dto.PaginationDTO;
 import cn.edu.hncj.forum.dto.QuestionDTO;
+import cn.edu.hncj.forum.dto.QuestionQueryDTO;
 import cn.edu.hncj.forum.exception.CustomizeErrorCode;
 import cn.edu.hncj.forum.exception.CustomizeException;
 import cn.edu.hncj.forum.mapper.QuestionExtMapper;
@@ -36,17 +36,31 @@ public class QuestionServiceImpl implements QuestionService {
 
     /**
      * 查询到所有的QuestionDTO(包括User信息)
+     *
+     * @param search
      * @param page 当前页
      * @param size 当前长度
      * @return 返回当前页面的所有信息(questions, page, pages)
      */
     @Override
-    public PaginationDTO list(Integer page, Integer size) {
+    public PaginationDTO list(String search, Integer page, Integer size) {
+
+        // 如果搜索框中有内容
+        if(StringUtils.isNotBlank(search))
+        {
+            // 例：queryDTO.getTag():"springboot,spring,java"
+            // tags["springboot","spring","java"]
+            String[] split = StringUtils.split(search.toLowerCase(), " ");
+            // 作用是把tags重新组合成形如：“springboot|spring|java”这种形式的sql语句的正则表达式
+            search = Arrays.stream(split).collect(Collectors.joining("|"));
+        }
 
         PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
         Integer totalPage;
         // 一共有多少问题
-        Integer totalCount = (int)questionMapper.countByExample(new QuestionExample());
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+        Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
         } else {
@@ -66,11 +80,12 @@ public class QuestionServiceImpl implements QuestionService {
 
         Integer offset = size * (page - 1);
 
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause("gmt_create desc");
+
+        questionQueryDTO.setOffset(offset);
+        questionQueryDTO.setSize(size);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
 
         // 封装，把question封装成questionDTO
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOS = questions.stream().map(q -> {
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(q, questionDTO);
@@ -89,7 +104,7 @@ public class QuestionServiceImpl implements QuestionService {
      * @param id   当前用户的id
      * @param page 当前页
      * @param size 当前长度
-     * @return
+     * @return PaginationDTO
      */
     @Override
     public PaginationDTO list(Long id, Integer page, Integer size) {

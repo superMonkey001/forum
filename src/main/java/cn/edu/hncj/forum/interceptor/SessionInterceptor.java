@@ -1,12 +1,10 @@
 package cn.edu.hncj.forum.interceptor;
 
-import cn.edu.hncj.forum.dto.PaginationDTO;
 import cn.edu.hncj.forum.mapper.UserMapper;
 import cn.edu.hncj.forum.model.User;
 import cn.edu.hncj.forum.model.UserExample;
 import cn.edu.hncj.forum.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,7 +23,7 @@ public class SessionInterceptor implements HandlerInterceptor {
     private NotificationService notificationService;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null && cookies.length != 0) {
             for (Cookie cookie : cookies) {

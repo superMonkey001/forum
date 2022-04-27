@@ -5,9 +5,7 @@ import cn.edu.hncj.forum.service.UserService;
 import cn.edu.hncj.forum.strategy.LoginUserInfo;
 import cn.edu.hncj.forum.strategy.UserStrategy;
 import cn.edu.hncj.forum.strategy.UserStrategyFactory;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,23 +26,15 @@ public class AuthoriseController {
     @Autowired
     private UserStrategyFactory userStrategyFactory;
 
-    @Value("${github.client.id}")
-    private String client_id;
-
-    @Value("${github.client.secret}")
-    private String client_secret;
-
-    @Value("${github.redirect.uri}")
-    private String redirect_uri;
-
     @Autowired
     private UserService userService;
-    /**
-     * @param code  Required. The code you received as a response to Step 1.
-     * @param state
-     * @return
-     */
-//    @GetMapping("/callback")
+
+//    /**
+//     * @param code  Required. The code you received as a response to Step 1.
+//     * @param state
+//     * @return
+//     */
+////    @GetMapping("/callback")
 //    public String callback(@RequestParam String code,
 //                           @RequestParam String state,
 //                           HttpServletResponse response) {
@@ -83,7 +73,7 @@ public class AuthoriseController {
     @GetMapping("/callback/{type}")
     public String callback2(@PathVariable("type") String type,
                             @RequestParam String code,
-                            @RequestParam(name = "state",required = false) String state,
+                            @RequestParam(name = "state", required = false) String state,
                             HttpServletResponse response,
                             HttpServletRequest request) {
         UserStrategy strategy = userStrategyFactory.getStrategy(type);
@@ -106,7 +96,7 @@ public class AuthoriseController {
             // 用户可以通过存在浏览器中里的token信息（后端IndexController通过token查询数据库）直接登录。而不用手动点击登录按钮
             Cookie tokenCookie = new Cookie("token", token);
             tokenCookie.setPath("/");
-            tokenCookie.setMaxAge(24*60*60);
+            tokenCookie.setMaxAge(24 * 60 * 60);
             response.addCookie(tokenCookie);
             Cookie[] cookies = request.getCookies();
 
