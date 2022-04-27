@@ -1,6 +1,10 @@
 package cn.edu.hncj.forum.enums;
 
 
+/**
+ * @author FanJian
+ */
+
 public enum CommentTypeEnum {
     QUESTION(1),
     COMMENT(2);

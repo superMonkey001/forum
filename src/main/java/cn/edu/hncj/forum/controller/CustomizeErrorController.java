@@ -23,8 +23,7 @@ public class CustomizeErrorController implements ErrorController {
 
         if (status.is4xxClientError()) {
             model.addAttribute("message", "你这个请求错了吧，要不然换个姿势？");
-        }
-        if (status.is5xxServerError()) {
+        } else if (status.is5xxServerError()) {
             model.addAttribute("message", "服务冒烟了，要不然你稍后再试试！！！");
         }
 

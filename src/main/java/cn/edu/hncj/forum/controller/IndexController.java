@@ -1,6 +1,8 @@
 package cn.edu.hncj.forum.controller;
 
 import cn.edu.hncj.forum.dto.PaginationDTO;
+import cn.edu.hncj.forum.model.User;
+import cn.edu.hncj.forum.service.NotificationService;
 import cn.edu.hncj.forum.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

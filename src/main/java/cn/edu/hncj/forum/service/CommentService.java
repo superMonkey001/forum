@@ -3,12 +3,13 @@ package cn.edu.hncj.forum.service;
 import cn.edu.hncj.forum.dto.CommentReturnDTO;
 import cn.edu.hncj.forum.enums.CommentTypeEnum;
 import cn.edu.hncj.forum.model.Comment;
+import cn.edu.hncj.forum.model.User;
 
 import java.util.List;
 
 public interface CommentService {
 
-    void insert(Comment comment);
+    void insert(Comment comment, User user);
 
     /**
      *

@@ -106,8 +106,9 @@ public class AuthoriseController {
             // 用户可以通过存在浏览器中里的token信息（后端IndexController通过token查询数据库）直接登录。而不用手动点击登录按钮
             Cookie tokenCookie = new Cookie("token", token);
             tokenCookie.setPath("/");
-            Cookie[] cookies = request.getCookies();
+            tokenCookie.setMaxAge(24*60*60);
             response.addCookie(tokenCookie);
+            Cookie[] cookies = request.getCookies();
 
             // 如果是从评论但是没有登录过来的请求
             if (cookies != null && cookies.length != 0) {

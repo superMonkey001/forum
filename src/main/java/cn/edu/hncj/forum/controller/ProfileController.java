@@ -1,7 +1,9 @@
 package cn.edu.hncj.forum.controller;
 
+import cn.edu.hncj.forum.dto.NotificationDTO;
 import cn.edu.hncj.forum.dto.PaginationDTO;
 import cn.edu.hncj.forum.model.User;
+import cn.edu.hncj.forum.service.NotificationService;
 import cn.edu.hncj.forum.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,11 +14,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class ProfileController {
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable("action") String action,
@@ -32,18 +38,25 @@ public class ProfileController {
             return "redirect:/";
         }
 
+        // 如果用户点击的是“我的问题”
         if ("questions".equals(action)) {
+            PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
             model.addAttribute("section", "questions");
             model.addAttribute("sectionName", "我的提问");
-        } else if ("replies".equals(action)) {
+            model.addAttribute("pagination",paginationDTO);
+        }// 如果用户点击的是“最新回复”
+        else if ("replies".equals(action)) {
+            PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
+            Long unreadCount = notificationService.unreadCount(user.getId());
             model.addAttribute("section", "replies");
             model.addAttribute("sectionName", "最新回复");
+            model.addAttribute("pagination",paginationDTO);
+            model.addAttribute("unreadCount",unreadCount);
         }
 
         // user : question = 1 : n 一个用户可以有多个问题
         // 通过user的id关联到question表
-        PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
-        model.addAttribute("pagination",paginationDTO);
+
         return "profile";
     }
 }

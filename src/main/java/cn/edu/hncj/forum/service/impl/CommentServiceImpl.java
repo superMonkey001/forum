@@ -2,13 +2,12 @@ package cn.edu.hncj.forum.service.impl;
 
 import cn.edu.hncj.forum.dto.CommentReturnDTO;
 import cn.edu.hncj.forum.enums.CommentTypeEnum;
+import cn.edu.hncj.forum.enums.NotificationStatusEnum;
+import cn.edu.hncj.forum.enums.NotificationTypeEnum;
 import cn.edu.hncj.forum.exception.CustomizeErrorCode;
 import cn.edu.hncj.forum.exception.CustomizeException;
 import cn.edu.hncj.forum.mapper.*;
-import cn.edu.hncj.forum.model.Comment;
-import cn.edu.hncj.forum.model.CommentExample;
-import cn.edu.hncj.forum.model.Question;
-import cn.edu.hncj.forum.model.User;
+import cn.edu.hncj.forum.model.*;
 import cn.edu.hncj.forum.service.CommentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +38,12 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private NotificationMapper notificationMapper;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void insert(Comment comment) {
+    public void insert(Comment comment, User commentator) {
         // 如果父级评论或父级问题被删除
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             // 因为抛出异常后，会返回当前页面一个JSON字符串（逻辑在CustomizeExceptionHandler类中封装）
@@ -56,6 +58,7 @@ public class CommentServiceImpl implements CommentService {
 
         // 如果评论的是一级评论
         if (commentType.equals(CommentTypeEnum.COMMENT.getType())) {
+            // 通过二级评论的父id找到一级评论
             Comment dbComment = commentMapper.selectByPrimaryKey(comment.getParentId());
             // 如果在评论一级评论的时候，一级评论被删除了
             if (dbComment == null) {
@@ -63,12 +66,26 @@ public class CommentServiceImpl implements CommentService {
             } else {
                 // 向数据库中插入这条评论的数据
                 commentMapper.insert(comment);
-                // 为父级评论的评论数加一
+
+                // 新建Comment作为SQL语句的参数
                 Comment parentComment = new Comment();
                 parentComment.setId(comment.getParentId());
                 // 现阶段设置成1，以后添加缓存功能的时候，可能会将参数改大.(set COMMENT_COUNT = COMMENT_COUNT + #{commentCount})
                 parentComment.setCommentCount(1);
+                // 增加父级评论的评论数
                 commentExtMapper.incCommentCount(parentComment);
+
+
+                // 查询一级评论的父级问题
+                Question dbQuestion = questionMapper.selectByPrimaryKey(dbComment.getParentId());
+                if (dbQuestion == null) {
+                    throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+                }
+
+
+                // 新建通知
+                createNotification(comment, NotificationTypeEnum.REPLY_COMMENT, commentator.getName(), dbQuestion.getTitle(), dbComment.getCommentator(), dbQuestion.getId());
+
             }
         }// 如果评论的是问题
         else if (commentType.equals(CommentTypeEnum.QUESTION.getType())) {
@@ -79,9 +96,37 @@ public class CommentServiceImpl implements CommentService {
                 commentMapper.insert(comment);
                 dbQuestion.setCommentCount(1);
                 questionExtMapper.incCommentCount(dbQuestion);
+
+                // 新建通知
+                createNotification(comment,NotificationTypeEnum.REPLY_QUESTION,commentator.getName(),dbQuestion.getTitle(),dbQuestion.getCreator(), dbQuestion.getId());
             }
 
         }
+    }
+
+    /**
+     * 创建通知
+     * @param comment 这条评论
+     * @param notificationTypeEnum 通知类型，区分是回复了评论，还是回复了问题
+     * @param notifierName 评论人昵称
+     * @param outerTitle
+     * @param receiver 通知的接收者
+     * @param outerid
+     */
+    private void createNotification(Comment comment, NotificationTypeEnum notificationTypeEnum, String notifierName, String outerTitle, Long receiver, Long outerid) {
+        // 添加通知
+        Notification notification = new Notification();
+        notification.setGmtCreate(System.currentTimeMillis());
+        notification.setOuterid(outerid);
+        notification.setNotifier(comment.getCommentator());
+        notification.setType(notificationTypeEnum.getType());
+        notification.setNotifierName(notifierName);
+        notification.setOuterTitle(outerTitle);
+        // 设置为未读
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+        // 设置消息接收者为父级问题或父级评论的评论人
+        notification.setReceiver(receiver);
+        notificationMapper.insert(notification);
     }
 
     @Override

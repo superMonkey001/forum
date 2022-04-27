@@ -43,7 +43,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public PaginationDTO list(Integer page, Integer size) {
 
-        PaginationDTO paginationDTO = new PaginationDTO();
+        PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
         Integer totalPage;
         // 一共有多少问题
         Integer totalCount = (int)questionMapper.countByExample(new QuestionExample());
@@ -69,24 +69,23 @@ public class QuestionServiceImpl implements QuestionService {
         QuestionExample questionExample = new QuestionExample();
         questionExample.setOrderByClause("gmt_create desc");
 
+        // 封装，把question封装成questionDTO
         List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(offset, size));
-        List<QuestionDTO> questionDTOS = new ArrayList<>();
-
-        for (Question question : questions) {
-            Long creatorId = question.getCreator();
-            QuestionDTO questionDTO = copy(question);
-            User user = userMapper.selectByPrimaryKey(creatorId);
-            questionDTO.setUser(user);
-            questionDTOS.add(questionDTO);
-        }
-        paginationDTO.setQuestions(questionDTOS);
+        List<QuestionDTO> questionDTOS = questions.stream().map(q -> {
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(q, questionDTO);
+            User creator = userMapper.selectByPrimaryKey(q.getCreator());
+            questionDTO.setUser(creator);
+            return questionDTO;
+        }).collect(Collectors.toList());
+        paginationDTO.setData(questionDTOS);
 
         return paginationDTO;
     }
 
     /**
      * 查看个人发布的所有问题
-     * 通过用户id返回页面信息
+     * 通过用户id返回我的问题页面信息
      * @param id   当前用户的id
      * @param page 当前页
      * @param size 当前长度
@@ -95,10 +94,11 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public PaginationDTO list(Long id, Integer page, Integer size) {
 
-        PaginationDTO paginationDTO = new PaginationDTO();
+        PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
         Integer totalPage;
         // 一共有多少问题
         QuestionExample questionExample = new QuestionExample();
+        questionExample.setOrderByClause("gmt_create desc");
         questionExample.createCriteria().andCreatorEqualTo(id);
         Integer totalCount = (int)questionMapper.countByExample(questionExample);
         if (totalCount % size == 0) {
@@ -128,7 +128,8 @@ public class QuestionServiceImpl implements QuestionService {
             questionDTO.setUser(user);
             questionDTOS.add(questionDTO);
         }
-        paginationDTO.setQuestions(questionDTOS);
+
+        paginationDTO.setData(questionDTOS);
 
         return paginationDTO;
     }
