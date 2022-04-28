@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * @author FanJian
  */
 public class TagCache {
-    public static List<TagDTO> get(){
+    public static List<TagDTO> get() {
         List<TagDTO> tagDTOS = new ArrayList<>();
         TagDTO program = new TagDTO();
         program.setCategoryName("开发语言");
@@ -40,13 +40,31 @@ public class TagCache {
         tagDTOS.add(tool);
         return tagDTOS;
     }
-    public static String filterInvalid(String tags) {
-        String[] split = StringUtils.split(tags, ",");
-        List<TagDTO> tagDTOS = get();
 
+    /**
+     * @param split 用户传进来的标签数组
+     * @return 不合法的标签（在所有标签中找不到的，以及空标签）
+     */
+    public static String filterInvalid(String[] split) {
+        List<TagDTO> tagDTOS = get();
         List<String> tagList = tagDTOS.stream().flatMap(tag -> tag.getTags().stream()).collect(Collectors.toList());
         String invalid = Arrays.stream(split).filter(t -> StringUtils.isBlank(t) || !tagList.contains(t)).collect(Collectors.joining(","));
         return invalid;
+    }
+
+    /**
+     * 检查用户是否传进来了空标签形如""、" "等
+     *
+     * @param split 用户传来的标签数组组
+     * @return 返回是否存在空标签
+     */
+    public static boolean checkBlank(String[] split) {
+        for (String s : split) {
+            if (StringUtils.isBlank(s)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

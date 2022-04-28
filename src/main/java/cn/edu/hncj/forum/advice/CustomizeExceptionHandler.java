@@ -33,7 +33,7 @@ public class CustomizeExceptionHandler {
             ResultDTO resultDTO;
             if (ex instanceof CustomizeException) {
                 // [2002,"未选中任何问题或评论进行回复"]
-                resultDTO = ResultDTO.errorOf((CustomizeException)ex);
+                resultDTO = ResultDTO.errorOf((CustomizeException) ex);
             } else {
                 // [2004,"服务器冒烟了~~~"]
                 resultDTO = ResultDTO.errorOf(CustomizeErrorCode.SYS_ERROR);

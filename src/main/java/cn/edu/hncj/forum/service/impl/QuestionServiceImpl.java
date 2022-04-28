@@ -2,7 +2,7 @@ package cn.edu.hncj.forum.service.impl;
 
 import cn.edu.hncj.forum.dto.PaginationDTO;
 import cn.edu.hncj.forum.dto.QuestionDTO;
-import cn.edu.hncj.forum.dto.QuestionQueryDTO;
+import cn.edu.hncj.forum.mapper.vo.QuestionQueryDTO;
 import cn.edu.hncj.forum.exception.CustomizeErrorCode;
 import cn.edu.hncj.forum.exception.CustomizeException;
 import cn.edu.hncj.forum.mapper.QuestionExtMapper;
@@ -37,22 +37,22 @@ public class QuestionServiceImpl implements QuestionService {
     /**
      * 查询到所有的QuestionDTO(包括User信息)
      *
-     * @param search
-     * @param page 当前页
-     * @param size 当前长度
+     * @param search 搜索框中的内容
+     * @param page   当前页
+     * @param size   当前长度
      * @return 返回当前页面的所有信息(questions, page, pages)
      */
     @Override
     public PaginationDTO list(String search, Integer page, Integer size) {
 
         // 如果搜索框中有内容
-        if(StringUtils.isNotBlank(search))
-        {
+        if (StringUtils.isNotBlank(search)) {
             // 例：queryDTO.getTag():"springboot,spring,java"
             // tags["springboot","spring","java"]
-            String[] split = StringUtils.split(search.toLowerCase(), " ");
-            // 作用是把tags重新组合成形如：“springboot|spring|java”这种形式的sql语句的正则表达式
-            search = Arrays.stream(split).collect(Collectors.joining("|"));
+            String[] split = StringUtils.split(search, " ");
+            // 作用是把tags中每个元素转成小写（对应QuestionExtMapper.xml中的select * from question where lower(title) regexp #{search}的小写结果），
+            // 然后重新组合成形如：“springboot|spring|java”这种形式的sql语句的正则表达式
+            search = Arrays.stream(split).map(String::toLowerCase).collect(Collectors.joining("|"));
         }
 
         PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
@@ -101,6 +101,7 @@ public class QuestionServiceImpl implements QuestionService {
     /**
      * 查看个人发布的所有问题
      * 通过用户id返回我的问题页面信息
+     *
      * @param id   当前用户的id
      * @param page 当前页
      * @param size 当前长度
@@ -114,7 +115,7 @@ public class QuestionServiceImpl implements QuestionService {
         // 一共有多少问题
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria().andCreatorEqualTo(id);
-        Integer totalCount = (int)questionMapper.countByExample(questionExample);
+        Integer totalCount = (int) questionMapper.countByExample(questionExample);
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
         } else {
@@ -151,13 +152,14 @@ public class QuestionServiceImpl implements QuestionService {
 
     /**
      * 通过id查找问题
+     *
      * @param id
      * @return
      */
     @Override
     public QuestionDTO findById(Long id) {
         Question question = questionMapper.selectByPrimaryKey(id);
-        if(question == null) {
+        if (question == null) {
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
         }
         User user = userMapper.selectByPrimaryKey(question.getCreator());
@@ -170,14 +172,14 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public void createOrUpdate(Question question) {
         // 如果/publish路径后面没有/id子路径，那么就是通过点击发布按钮新建问题，而不是点击编辑按钮更改问题
-        if(question.getId() == null) {
+        if (question.getId() == null) {
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
             question.setViewCount(0);
             question.setLikeCount(0);
             question.setCommentCount(0);
             questionMapper.insert(question);
-        }else {
+        } else {
             Question updateQuestion = new Question();
             updateQuestion.setId(question.getId());
             updateQuestion.setGmtModified(System.currentTimeMillis());
@@ -188,7 +190,7 @@ public class QuestionServiceImpl implements QuestionService {
             // 那么这个问题将不存在，执行更新操作会返回0
             int updated = questionMapper.updateByPrimaryKeySelective(updateQuestion);
             // 更新失败
-            if(updated == 0) {
+            if (updated == 0) {
                 // 抛出问题不存在异常
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
@@ -207,8 +209,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<QuestionDTO> selectRelated(QuestionDTO queryDTO) {
 
-        if(StringUtils.isBlank(queryDTO.getTag()))
-        {
+        if (StringUtils.isBlank(queryDTO.getTag())) {
             return new ArrayList<>();
         }
 
@@ -230,8 +231,9 @@ public class QuestionServiceImpl implements QuestionService {
         // 封装questionDTOS并返回
         List<QuestionDTO> questionDTOS = questions.stream().map(q -> {
             QuestionDTO questionDTO = new QuestionDTO();
-            BeanUtils.copyProperties(q,questionDTO);
-            return questionDTO;}).collect(Collectors.toList());
+            BeanUtils.copyProperties(q, questionDTO);
+            return questionDTO;
+        }).collect(Collectors.toList());
         return questionDTOS;
     }
 

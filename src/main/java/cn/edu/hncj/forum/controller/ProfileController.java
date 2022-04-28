@@ -43,13 +43,13 @@ public class ProfileController {
             PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
             model.addAttribute("section", "questions");
             model.addAttribute("sectionName", "我的提问");
-            model.addAttribute("pagination",paginationDTO);
+            model.addAttribute("pagination", paginationDTO);
         }// 如果用户点击的是“最新回复”
         else if ("replies".equals(action)) {
             PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
             model.addAttribute("section", "replies");
             model.addAttribute("sectionName", "最新回复");
-            model.addAttribute("pagination",paginationDTO);
+            model.addAttribute("pagination", paginationDTO);
         }
 
         return "profile";

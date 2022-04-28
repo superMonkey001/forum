@@ -5,7 +5,6 @@ import cn.edu.hncj.forum.provider.dto.GiteeUser;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import okhttp3.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +40,7 @@ public class GiteeProvider {
         RequestBody body = RequestBody.create(MEDIA_TYPE, JSON.toJSONString(accessTokenDTO));
 
         String url = "https://gitee.com/oauth/token?grant_type=authorization_code&code=%s&client_id=%s&redirect_uri=%s&client_secret=%s";
-        url = String.format(url,accessTokenDTO.getCode(), clientId, redirectUri, clientSecret);
+        url = String.format(url, accessTokenDTO.getCode(), clientId, redirectUri, clientSecret);
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)

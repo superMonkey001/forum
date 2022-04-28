@@ -19,10 +19,10 @@
      * @param arr
      * @returns {boolean}
      */
-    function isRepeat(arr){
+    function isRepeat(arr) {
         var hash = {};
-        for(var i in arr) {
-            if(hash[arr[i]])
+        for (var i in arr) {
+            if (hash[arr[i]])
                 return true;
             hash[arr[i]] = true;
         }
@@ -37,7 +37,6 @@
         $(".hoverTag").click(function () {
             // 标签输入框中的内容
             var tagText = $("#tag").val();
-            
             // 把标签输入框中的内容以逗号分隔为数组
             var tags = tagText.split(',');
             // 把当前选中的标签加载数组的末尾
@@ -62,7 +61,7 @@
             }
         });
         $("#closeTags").click(function () {
-                $("#tagTab").css("display", "none");
+            $("#tagTab").css("display", "none");
         })
     })
 </script>
@@ -93,17 +92,19 @@
                 <!--标签输入框-->
                 <div class="form-group">
                     <label for="tag">标签</label>
-                    <input type="text" name="tag"  class="form-control" id="tag"
-                           placeholder="输入标签，以，隔开" autocomplete="off" th:value="${tag}" autocapitalize="off">
+                    <input type="text" name="tag" class="form-control" id="tag"
+                           placeholder="请选择问题的相关标签~~" readonly autocomplete="off" th:value="${tag}" autocapitalize="off">
                 </div>
 
                 <!--标签选择-->
-                <div id="tagTab" style="display: none;border: 1px solid #AAA;border-radius: 5px;" class="public-tag-tab">
+                <div id="tagTab" style="display: none;border: 1px solid #AAA;border-radius: 5px;"
+                     class="public-tag-tab">
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" th:each="tabTag,stat:${tags}" th:class="${stat.first ? 'active':''}">
                             <a th:href="${'#'+tabTag.categoryName}" aria-controls="home" role="tab" data-toggle="tab">[[${tabTag.categoryName}]]</a>
                         </li>
-                        <input id="closeTags" class="pull-right" type="button" th:value="X" style="color: black;border-radius: 50%"/>
+                        <input id="closeTags" class="pull-right" type="button" th:value="X"
+                               style="color: black;border-radius: 50%"/>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" th:id="${tabTag.categoryName}" th:each="tabTag,stat:${tags}"
@@ -143,6 +144,5 @@
         </div><!--一大段文字-->
     </div>
 </div>
-
 </body>
 </html>

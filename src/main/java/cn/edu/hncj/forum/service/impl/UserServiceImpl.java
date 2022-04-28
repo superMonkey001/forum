@@ -14,8 +14,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
     /**
      * 如果这个用户已经存在于数据库中，则执行创建，否则执行更新操作
+     *
      * @param user 前端传入后端的用户数据
      */
     @Override
@@ -24,14 +26,14 @@ public class UserServiceImpl implements UserService {
         userExample.createCriteria().andAccountIdEqualTo(user.getAccountId()).andTypeEqualTo(user.getType());
         List<User> users = userMapper.selectByExample(userExample);
         User dbUser = null;
-        if(users != null && users.size() != 0) {
+        if (users != null && users.size() != 0) {
             dbUser = users.get(0);
         }
-        if(dbUser == null) {
+        if (dbUser == null) {
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
             userMapper.insert(user);
-        }else {
+        } else {
             User updateUser = new User();
             updateUser.setId(dbUser.getId());
             updateUser.setGmtModified(System.currentTimeMillis());

@@ -1,6 +1,6 @@
 package cn.edu.hncj.forum.exception;
 
-public class CustomizeException extends RuntimeException{
+public class CustomizeException extends RuntimeException {
     private Integer code;
     private String message;
 
@@ -8,6 +8,7 @@ public class CustomizeException extends RuntimeException{
         this.code = customizeErrorCode.getCode();
         this.message = customizeErrorCode.getMessage();
     }
+
     @Override
     public String getMessage() {
         return message;

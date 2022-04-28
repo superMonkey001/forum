@@ -90,8 +90,10 @@
                 <div class="media">
                     <div class="media-left">
                         <a href="javascript:void(0)">
-                            <img class="media-object img-rounded" th:if="${session.user != null}" th:src="${session.user.avatarUrl}">
-                            <img class="media-object img-rounded" th:if="${session.user == null}" src="/images/anonymous.png">
+                            <img class="media-object img-rounded" th:if="${session.user != null}"
+                                 th:src="${session.user.avatarUrl}">
+                            <img class="media-object img-rounded" th:if="${session.user == null}"
+                                 src="/images/anonymous.png">
                         </a>
                     </div>
                     <div class="media-body" style="padding-top: 10px">
@@ -100,7 +102,8 @@
                     </div>
                 </div>
                 <input type="hidden" id="question_id" th:value="${question.id}">
-                <textarea id="comment_content" class="form-control textarea-comment" rows="6" placeholder="回复前请先登录哦~~"></textarea>
+                <textarea id="comment_content" class="form-control textarea-comment" rows="6"
+                          placeholder="回复前请先登录哦~~"></textarea>
                 <button type="button" class="btn btn-success btn-comment"
                         onclick="post()">回复
                 </button>

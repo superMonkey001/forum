@@ -30,7 +30,7 @@ public class CommentController {
     @ResponseBody
     @PostMapping("/comment")
     public ResultDTO comment(@RequestBody CommentParamDTO commentParamDTO,
-                          HttpServletRequest request) {
+                             HttpServletRequest request) {
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
@@ -56,7 +56,7 @@ public class CommentController {
 
     @ResponseBody
     @GetMapping("/comment/{id}")
-    public ResultDTO<List<CommentReturnDTO>> comments(@PathVariable Long id){
+    public ResultDTO<List<CommentReturnDTO>> comments(@PathVariable Long id) {
         List<CommentReturnDTO> commentDTOS = commentService.listByParentId(id, CommentTypeEnum.COMMENT);
         return ResultDTO.okOf(commentDTOS);
     }

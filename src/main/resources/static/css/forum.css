@@ -1,15 +1,24 @@
 body {
     background-color: #efefef;
+    background: url("../images/美女.png") 100% 100% fixed;
+    height: 100vh;
 }
 
 .main {
     background-color: white;
-    margin: 30px;
+    margin: 0 auto 70px;
+    border-radius: 5px;
+    width: 90%;
+    min-height: 90%;
 }
 
 .btn-publish {
     margin-bottom: 15px;
 }
+
+
+
+/*首页*/
 
 /*头像*/
 .media-object {
@@ -24,27 +33,55 @@ body {
     color: #999;
 }
 
+
+
+
+
+
+/*个人页面*/
 .profile .section {
     margin-top: 15px;
 }
+
+
 
 .forum-menu {
     font-size: 13px;
     color: #999;
 }
+
+
+
+
+
+
+
+/*错误信息页面*/
 .jumbotron {
     margin: 30px;
 }
 
 
+
+
+
+
+
+
+
+
+/*问题详情页面/question*/
 /*回复部分*/
 .textarea-comment {
     margin: 10px 0;
 }
+
+
 .btn-comment {
     float: right;
     margin-bottom: 10px;
 }
+
 /*评论的分隔*/
 .comment-separate {
     border-bottom: 2px solid #f1f1f1;
@@ -53,18 +90,13 @@ body {
 }
 
 /*二级评论*/
-.sub-comments
-{
-    border-radius:5px;
+.sub-comments {
+    border-radius: 5px;
     margin-top: 10px;
     border: 1px solid #eee;
     padding-top: 15px;
     margin-bottom: 15px;
 }
-
-
-
-
 
 
 .menu {
@@ -82,29 +114,37 @@ body {
     color: #c1e2b3;
 }
 
-
 .menu .active {
     color: #499ef3;
 }
 
 
 
+
+
+
+
+
+
+
+/*发布页面*/
 /*标签*/
-.question-tag{
+.question-tag {
     font-size: 100%;
     font-weight: 500;
+    background: #ebf2f7;
+    color: #93adc2;
 }
+
+
 /*标签上的光标手*/
-.hoverTag:hover{
+.hoverTag:hover {
     cursor: pointer;
     color: #ffff00;
 }
 
-
-
-
-.public-tag-tab .label-info
-{
+/*标签群块*/
+.public-tag-tab .label-info {
     margin-right: 10px;
     white-space: normal;
     margin: 5px 5px;
@@ -112,8 +152,30 @@ body {
 }
 
 /*相关问题*/
-.related-question
-{
+.related-question {
     list-style: none;
 }
 
+/*发布问题的错误提示*/
+.alert-danger {
+    margin-top: 8px;
+    width: 50%;
+    background: bottom;
+}
+
+
+
+
+
+
+.active list-group-item {
+    background: silver;
+}
+
+
+
+.btn-success {
+    border-radius: 64px;
+    background: skyblue;
+    border: 0;
+}

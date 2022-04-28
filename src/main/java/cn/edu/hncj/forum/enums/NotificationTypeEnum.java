@@ -29,7 +29,7 @@ public enum NotificationTypeEnum {
             if (notificationTypeEnum.getType() == type) {
                 return notificationTypeEnum.getName();
             }
-         }
+        }
         return "";
     }
 }

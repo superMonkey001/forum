@@ -72,7 +72,7 @@ function comment2Parent(parentId, type, content) {
                         var isAccept = confirm(response.message);
                         if (isAccept) {
                             // 添加cookie
-                            addCookie("commentButNoLogin",parentId);
+                            addCookie("commentButNoLogin", parentId);
                             // 打开登录界面
                             $('#myModal').modal({});
                             // window.open("https://github.com/login/oauth/authorize?client_id=cd40e3e26ced2f5e81d0&redirect_uri=http://localhost:8887/callback&scope=user&state=1");

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class GithubUserStrategy implements UserStrategy {
     @Autowired
     private GithubProvider githubProvider;
+
     @Override
     public LoginUserInfo getUser(String code, String state) {
 
@@ -20,7 +21,7 @@ public class GithubUserStrategy implements UserStrategy {
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser githubUser = githubProvider.getGithubUser(accessToken);
         LoginUserInfo loginUserInfo = new LoginUserInfo();
-        BeanUtils.copyProperties(githubUser,loginUserInfo);
+        BeanUtils.copyProperties(githubUser, loginUserInfo);
         return loginUserInfo;
     }
 

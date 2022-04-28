@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+
 @Service
 public class UserStrategyFactory {
     @Autowired
@@ -13,7 +14,7 @@ public class UserStrategyFactory {
 
     public UserStrategy getStrategy(String type) {
         for (UserStrategy userStrategy : userStrategies) {
-            if(StringUtils.equals(type,userStrategy.getSupportedType())) {
+            if (StringUtils.equals(type, userStrategy.getSupportedType())) {
                 return userStrategy;
             }
         }

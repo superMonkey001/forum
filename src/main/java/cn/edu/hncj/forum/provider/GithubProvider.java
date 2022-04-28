@@ -28,6 +28,7 @@ public class GithubProvider {
     /**
      * 登录功能的第二步
      * okHttp插件帮助后台模拟post请求，访问https://github.com/login/oauth/access_token
+     *
      * @param accessTokenDTO
      * @return 返回access_token
      */
@@ -55,6 +56,7 @@ public class GithubProvider {
     /**
      * 登录功能的第三步
      * okHttp插件帮助后台模拟get请求,访问https://api.github.com/user（带头信息Authorization）
+     *
      * @param accessToken
      * @return 返回Github用户的信息
      */
@@ -63,7 +65,7 @@ public class GithubProvider {
         // github获取User信息的新方式
         Request request = new Request.Builder()
                 .url("https://api.github.com/user")
-                .header("Authorization","token "+accessToken)
+                .header("Authorization", "token " + accessToken)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {

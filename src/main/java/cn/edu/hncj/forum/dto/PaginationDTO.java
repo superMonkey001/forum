@@ -18,9 +18,10 @@ public class PaginationDTO<T> {
     private List<Integer> pages = new ArrayList<>();
     // 总页数
     private Integer totalPage;
+
     /**
      * @param totalPage 总页数
-     * @param page       当前页
+     * @param page      当前页
      */
     public void setPagination(Integer totalPage, Integer page) {
         this.totalPage = totalPage;
@@ -31,7 +32,7 @@ public class PaginationDTO<T> {
         // 把前三页和后三页的的页码加入到pages中
         for (int i = 1; i <= 3; i++) {
             if (page - i > 0) {
-                pages.add(0,page - i);
+                pages.add(0, page - i);
             }
 
             if (page + i <= totalPage) {

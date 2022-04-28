@@ -12,7 +12,6 @@ public interface CommentService {
     void insert(Comment comment, User user);
 
     /**
-     *
      * @param parentId 通过父级id查找评论
      * @param type
      * @return 返回所有id为parentId的问题或回复的评论

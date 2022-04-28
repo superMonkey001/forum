@@ -39,7 +39,7 @@ public class NotificationServiceImpl implements NotificationService {
      * @param id   当前用户（接收通知的用户）的id
      * @param page 当前页
      * @param size 当前长度
-     * @return
+     * @return 通知页面信息
      */
     @Override
     public PaginationDTO list(Long id, Integer page, Integer size) {
@@ -89,6 +89,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     /**
      * 通过用户id查找用户的未读消息总数
+     *
      * @param id 用户（接受消息的用户）id
      * @return 未读的回复数
      */
@@ -102,7 +103,8 @@ public class NotificationServiceImpl implements NotificationService {
 
     /**
      * 通过通知的id查找通知，并更新通知，并校验是不是自己读的通知
-     * @param id 通知的id
+     *
+     * @param id   通知的id
      * @param user 当前登录的用户
      * @return 带有TypeName和outerTitle的NotificationDTO通知对象
      */

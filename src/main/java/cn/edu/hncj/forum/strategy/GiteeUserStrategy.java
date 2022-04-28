@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GiteeUserStrategy implements UserStrategy{
+public class GiteeUserStrategy implements UserStrategy {
     @Autowired
     private GiteeProvider giteeProvider;
 
@@ -21,7 +21,7 @@ public class GiteeUserStrategy implements UserStrategy{
         String accessToken = giteeProvider.getAccessToken(accessTokenDTO);
         GiteeUser giteeUser = giteeProvider.getGiteeUser(accessToken);
         LoginUserInfo loginUserInfo = new LoginUserInfo();
-        BeanUtils.copyProperties(giteeUser,loginUserInfo);
+        BeanUtils.copyProperties(giteeUser, loginUserInfo);
         return loginUserInfo;
     }
 

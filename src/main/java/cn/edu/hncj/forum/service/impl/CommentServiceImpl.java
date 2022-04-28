@@ -98,7 +98,7 @@ public class CommentServiceImpl implements CommentService {
                 questionExtMapper.incCommentCount(dbQuestion);
 
                 // 新建通知
-                createNotification(comment,NotificationTypeEnum.REPLY_QUESTION,commentator.getName(),dbQuestion.getTitle(),dbQuestion.getCreator(), dbQuestion.getId());
+                createNotification(comment, NotificationTypeEnum.REPLY_QUESTION, commentator.getName(), dbQuestion.getTitle(), dbQuestion.getCreator(), dbQuestion.getId());
             }
 
         }
@@ -106,12 +106,13 @@ public class CommentServiceImpl implements CommentService {
 
     /**
      * 创建通知
-     * @param comment 这条评论
+     *
+     * @param comment              这条评论
      * @param notificationTypeEnum 通知类型，区分是回复了评论，还是回复了问题
-     * @param notifierName 评论人昵称
+     * @param notifierName         评论人昵称
      * @param outerTitle
-     * @param receiver 通知的接收者
-     * @param outerid 问题的id
+     * @param receiver             通知的接收者
+     * @param outerid              问题的id
      */
     private void createNotification(Comment comment, NotificationTypeEnum notificationTypeEnum, String notifierName, String outerTitle, Long receiver, Long outerid) {
         // 如果评论人和发布人是一个人就不用通知
@@ -147,7 +148,7 @@ public class CommentServiceImpl implements CommentService {
 
     private CommentReturnDTO copy(Comment comment) {
         CommentReturnDTO commentReturnDTO = new CommentReturnDTO();
-        BeanUtils.copyProperties(comment,commentReturnDTO);
+        BeanUtils.copyProperties(comment, commentReturnDTO);
         User user = userMapper.selectByPrimaryKey(comment.getCommentator());
         commentReturnDTO.setUser(user);
         return commentReturnDTO;

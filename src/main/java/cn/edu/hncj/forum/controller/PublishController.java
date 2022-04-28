@@ -85,7 +85,15 @@ public class PublishController {
             model.addAttribute("error", "标签不能为空");
             return "publish";
         }
-        String invalid = TagCache.filterInvalid(tag);
+
+        // StringUtils的split方法会将形如"java,,spring"这样的字符串转换成["java","spring"]这样的字符串数组,直接去掉了逗号之间的""
+        String[] split = tag.split( ",");
+        if (TagCache.checkBlank(split)) {
+            model.addAttribute("error", "传入了空标签");
+            return "publish";
+        }
+
+        String invalid = TagCache.filterInvalid(split);
         if (StringUtils.isNotBlank(invalid)) {
             model.addAttribute("error", "输入了非法标签" + invalid);
             return "publish";
