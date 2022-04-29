@@ -1,9 +1,10 @@
+/*最外层*/
 body {
-    background-color: #efefef;
     background: url("../images/美女.png") 100% 100% fixed;
     height: 100vh;
 }
 
+/*第二层*/
 .main {
     background-color: white;
     margin: 0 auto 70px;
@@ -36,8 +37,6 @@ body {
 
 
 
-
-
 /*个人页面*/
 .profile .section {
     margin-top: 15px;
@@ -45,6 +44,8 @@ body {
 
 
 
+
+/*编辑*/
 .forum-menu {
     font-size: 13px;
     color: #999;
@@ -74,6 +75,15 @@ body {
 /*回复部分*/
 .textarea-comment {
     margin: 10px 0;
+}
+
+/*相关问题*/
+.question-related {
+    line-height: 25px;
+    font-size: 17px;
+    margin-left: 0;
+    list-style: none;
+    padding-left: 0;
 }
 
 
@@ -168,14 +178,24 @@ body {
 
 
 
-.active list-group-item {
-    background: silver;
-}
 
-
-
+/*回复&评论&发布按钮*/
 .btn-success {
     border-radius: 64px;
     background: skyblue;
     border: 0;
+}
+
+
+
+
+
+
+
+/*页脚*/
+.footer {
+    text-align: center;
+    font-size: 16px;
+    color: white;
+    padding: 0 0 15px 0;
 }

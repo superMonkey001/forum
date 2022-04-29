@@ -15,7 +15,7 @@
 <div class="container-fluid main profile">
     <div class="row">
         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-            <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+            <h2><span class="glyphicon" aria-hidden="true"></span>
                 <span th:text="${sectionName}"></span>
             </h2>
             <hr>
@@ -92,9 +92,11 @@
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
             <div class="list-group section">
                 <a href="/profile/questions"
-                   th:class="${section == 'questions' ? 'active list-group-item ' : 'list-group-item'}">我的问题</a>
+                   th:class="${section == 'questions' ? 'active list-group-item ' : 'list-group-item'}"
+                   th:style="${section == 'questions' ? 'background: #EAE8E8;color: #636363;border: 0;text-shadow: 0 0px 0px;' : ''}">我的问题</a>
                 <a href="/profile/replies"
-                   th:class="${section == 'replies' ? 'active list-group-item' : 'list-group-item'}">
+                   th:class="${section == 'replies' ? 'active list-group-item' : 'list-group-item'}"
+                   th:style="${section == 'replies' ? 'background: #EAE8E8;color: #636363;border: 0;text-shadow: 0 0px 0px;' : ''}">
                     最新回复
                     <span class="badge" th:text="${session.unreadCount}">14</span>
                 </a>
@@ -102,5 +104,6 @@
         </div>
     </div>
 </div>
+<div th:insert="~{footer :: foot}"></div>
 </body>
 </html>
