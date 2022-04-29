@@ -32,7 +32,7 @@ public class AuthoriseController {
     private UserService userService;
 
     @GetMapping("/callback/{type}")
-    public String callback2(@PathVariable("type") String type,
+    public String callback(@PathVariable("type") String type,
                             @RequestParam String code,
                             @RequestParam(name = "state", required = false) String state,
                             HttpServletResponse response,
@@ -60,18 +60,28 @@ public class AuthoriseController {
             tokenCookie.setMaxAge(24 * 60 * 60);
             response.addCookie(tokenCookie);
             Cookie[] cookies = request.getCookies();
-
-            // 如果是从评论但是没有登录过来的请求
+            // 检测用户是否没有登录就进行评论
+            // 因为在js处理逻辑中中noLoginComment这个cookie总是加在commentButNoLogin之前的，
+            // 因此不用担心下面这段逻辑是先跳转到question页面，而导致noLoginComment没有加到cookies当中
             if (cookies != null && cookies.length != 0) {
                 for (Cookie cookie : cookies) {
-                    if ("commentButNoLogin".equals(cookie.getName())) {
-                        // 问题的id
-                        String id = cookie.getValue();
-                        Cookie commentButNoLogin = new Cookie("commentButNoLogin", "");
+                    if ("noLoginComment".equals(cookie.getName())) {
+                        // 把评论的内容传给/question/{id}接口
+                        String noLoginComment = cookie.getValue();
+                        request.getSession().setAttribute("noLoginComment",noLoginComment);
+                        // 移除这个cookie
                         cookie.setMaxAge(0);
                         cookie.setPath("/");
-                        response.addCookie(commentButNoLogin);
-                        return "redirect:/question/" + id;
+                        response.addCookie(cookie);
+                    } else if ("commentButNoLogin".equals(cookie.getName())) {
+                        // 把问题的id传给/question/{id}接口（方法）
+                        // 问题的id
+                        String questionId = cookie.getValue();
+                        // 移除这个cookie
+                        cookie.setMaxAge(0);
+                        cookie.setPath("/");
+                        response.addCookie(cookie);
+                        return "redirect:/question/" + questionId;
                     }
                 }
             }

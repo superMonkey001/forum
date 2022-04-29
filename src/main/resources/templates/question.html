@@ -114,7 +114,7 @@
                 </div>
                 <input type="hidden" id="question_id" th:value="${question.id}">
                 <textarea id="comment_content" class="form-control textarea-comment" rows="6"
-                          placeholder="回复前请先登录哦~~"></textarea>
+                          placeholder="回复前请先登录哦~~" th:text="${noLoginComment}"></textarea>
                 <button type="button" class="btn btn-success btn-comment"
                         onclick="post()">回复
                 </button>

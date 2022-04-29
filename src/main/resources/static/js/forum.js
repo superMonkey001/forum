@@ -46,6 +46,11 @@ var addCookie = function (name, value) {
 
 
 //抽取方法
+/**
+ * @param parentId 父级id
+ * @param type 当前评论的级别（一级评论还是二级评论）
+ * @param content 评论的内容
+ */
 function comment2Parent(parentId, type, content) {
     // 如果content为nan或为全空格
     if (!content || content.match(/^[ ]*$/)) {
@@ -70,9 +75,22 @@ function comment2Parent(parentId, type, content) {
                     // 需要登录
                     if (response.code == 2003) {
                         var isAccept = confirm(response.message);
+                        // 如果接受登录
                         if (isAccept) {
                             // 添加cookie
-                            addCookie("commentButNoLogin", parentId);
+                            // 把评论的内容添加到cookie中
+                            addCookie("noLoginComment",content);
+                            // 如果是一级评论
+                            if (type == 1) {
+                                // parentId就相当于问题id
+                                addCookie("commentButNoLogin", parentId);
+                            }// 如果是二级评论
+                            else {
+                                // 如果是二级评论，就要从input元素中获取问题id
+                                var questionId = $("#question_id")[0].value;
+                                addCookie("commentButNoLogin",questionId);
+                            }
+
                             // 打开登录界面
                             $('#myModal').modal({});
                             // window.open("https://github.com/login/oauth/authorize?client_id=cd40e3e26ced2f5e81d0&redirect_uri=http://localhost:8887/callback&scope=user&state=1");
@@ -97,8 +115,9 @@ function post() {
     comment2Parent(questionId, 1, commentContent);
 }
 
-
+/*提交二级评论*/
 function comment(e) {
+    // 获取一级评论的id
     var commentId = e.getAttribute("data-id");
     var content = $("#input-" + commentId).val();
     comment2Parent(commentId, 2, content);
