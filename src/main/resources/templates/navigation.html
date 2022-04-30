@@ -29,7 +29,7 @@
                 </form>
                 <ul class="nav navbar-nav navbar-right">
                     <li th:if="${session.user != null}">
-                        <a href="/publish" class="text">提问</a>
+                        <a href="/publish" class="text">发布</a>
                     </li>
                     <li th:if="${session.user != null}">
                         <a href="/profile/replies" style="text-shadow: none;color: white;">通知 <span class="badge"
@@ -67,10 +67,10 @@
                 <div class="modal-body" style="text-align: center">
                     <!--<a href="https://github.com/login/oauth/authorize?client_id=7b8e0403167f8fef70f3&redirect_uri=http://localhost:8887/callback/github&scope`=user&state=1"><img
                             src="/images/github.png"></a>-->
-                    <a th:href="@{https://github.com/login/oauth/authorize(client_id='7b8e0403167f8fef70f3',redirect_uri=${#httpServletRequest.getRequestURL()+'callback/github'},scope='user',state=1)}">
+                    <a th:href="@{https://github.com/login/oauth/authorize(client_id='7b8e0403167f8fef70f3',redirect_uri='http://117.50.181.73/callback/github',scope='user',state=1)}">
                         <img src="/images/github.png">
                     </a>
-                    <a th:href="@{https://gitee.com/oauth/authorize(client_id='88fb5e6efec699811468006728a894de91412a2df7661bea29dc86f35d1979cc',redirect_uri=${#httpServletRequest.getRequestURL()+'callback/gitee'},response_type='code')}">
+                    <a th:href="@{https://gitee.com/oauth/authorize(client_id='88fb5e6efec699811468006728a894de91412a2df7661bea29dc86f35d1979cc',redirect_uri='http://117.50.181.73/callback/gitee',response_type='code')}">
                         <img src="/images/gitee.png">
                     </a>
                     <!--<a href="https://gitee.com/oauth/authorize?client_id=88fb5e6efec699811468006728a894de91412a2df7661bea29dc86f35d1979cc&redirect_uri=http://localhost:8887/callback/gitee&response_type=code"><img
