@@ -18,7 +18,6 @@ body {
 }
 
 
-
 /*首页*/
 
 /*头像*/
@@ -33,8 +32,6 @@ body {
     font-weight: normal;
     color: #999;
 }
-
-
 
 
 /*个人页面*/
@@ -52,23 +49,10 @@ body {
 }
 
 
-
-
-
-
-
 /*错误信息页面*/
 .jumbotron {
     margin: 30px;
 }
-
-
-
-
-
-
-
-
 
 
 /*问题详情页面/question*/
@@ -129,14 +113,6 @@ body {
 }
 
 
-
-
-
-
-
-
-
-
 /*发布页面*/
 /*标签*/
 .question-tag {
@@ -174,11 +150,6 @@ body {
 }
 
 
-
-
-
-
-
 /*回复&评论&发布按钮*/
 .btn-success {
     border-radius: 64px;
@@ -187,15 +158,42 @@ body {
 }
 
 
-
-
-
-
-
 /*页脚*/
 .footer {
     text-align: center;
     font-size: 16px;
     color: white;
     padding: 0 0 15px 0;
+}
+
+
+/*导航条*/
+.navbar-default {
+    background: text;
+    border: 0;
+
+}
+
+
+/*导航条文字样式*/
+.text {
+    text-shadow: none;
+    color: white !important;
+}
+
+/*导航条下拉框*/
+.open > a {
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+/*通知数*/
+.badge {
+    background-color: white;
+    color: black ;
+}
+
+/*下拉三角*/
+.caret {
+    color: white;
 }

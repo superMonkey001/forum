@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org">
-
+<link rel="stylesheet" href="/static/css/forum.css">
 <body>
 
 <div th:fragment="navi">
@@ -16,29 +16,29 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">聚码</a>
+                <a class="navbar-brand" style="text-shadow: none;color: lightgoldenrodyellow;" href="/">聚码</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <form class="navbar-form navbar-left" action="/" method="get">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="搜索问题" name="search">
+                        <input type="text" class="form-control input-search" placeholder="搜索问题" name="search">
                     </div>
-                    <button type="submit" class="btn btn-default">搜索</button>
+                    <button type="submit" class="btn btn-default btn-search">搜索</button>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
                     <li th:if="${session.user != null}">
-                        <a href="/publish">提问</a>
+                        <a href="/publish" class="text">提问</a>
                     </li>
                     <li th:if="${session.user != null}">
-                        <a href="/profile/replies">通知 <span class="badge" th:text="${session.unreadCount}"></span></a>
+                        <a href="/profile/replies" style="text-shadow: none;color: white;">通知 <span class="badge" th:text="${session.unreadCount}"></span></a>
                     </li>
 
                     <li th:if="${session.user != null}" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">
-                            <span th:text="${session.user.name}"></span>
+                            <span class="text" th:text="${session.user.name}"></span>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
@@ -48,7 +48,7 @@
                     </li>
                     <li th:if="${session.user == null}">
                         <!-- 登录功能的第一步 -->
-                        <a data-toggle="modal" data-target="#myModal">登录</a>
+                        <a data-toggle="modal" data-target="#myModal" style="text-shadow: none;color: white;">登录</a>
                     </li>
                 </ul>
             </div><!-- /.navbar-collapse -->
@@ -64,7 +64,7 @@
                     <h4 class="modal-title" id="myModalLabel">登录注册</h4>
                 </div>
                 <div class="modal-body" style="text-align: center">
-                    <a href="https://github.com/login/oauth/authorize?client_id=7b8e0403167f8fef70f3&redirect_uri=http://localhost:8887/callback/github&scope=user&state=1"><img
+                    <a href="https://github.com/login/oauth/authorize?client_id=7b8e0403167f8fef70f3&redirect_uri=http://localhost:8887/callback/github&scope`=user&state=1"><img
                             src="/images/github.png"></a>
                     <a href="https://gitee.com/oauth/authorize?client_id=88fb5e6efec699811468006728a894de91412a2df7661bea29dc86f35d1979cc&redirect_uri=http://localhost:8887/callback/gitee&response_type=code"><img
                             src="/images/gitee.png"></a>
