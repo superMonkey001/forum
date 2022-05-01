@@ -3,6 +3,8 @@ package cn.edu.hncj.forum.controller;
 import cn.edu.hncj.forum.dto.CommentReturnDTO;
 import cn.edu.hncj.forum.dto.QuestionDTO;
 import cn.edu.hncj.forum.enums.CommentTypeEnum;
+import cn.edu.hncj.forum.exception.CustomizeErrorCode;
+import cn.edu.hncj.forum.exception.CustomizeException;
 import cn.edu.hncj.forum.service.CommentService;
 import cn.edu.hncj.forum.service.QuestionService;
 import org.apache.commons.lang3.StringUtils;
@@ -24,21 +26,32 @@ public class QuestionController {
     @Autowired
     private CommentService commentService;
 
+    /**
+     * @param id(String) : 设置成String是为了防止类型异常,
+     *                   测试markdown期间，输入了形如[百度](baidu.com)这样的错误链接，
+     *                   导致最后连接拼接成https://www.jumaforum.com/question/baidu.com
+     */
     @GetMapping("question/{id}")
-    public String question(@PathVariable("id") Long id,
+    public String question(@PathVariable("id") String id,
                            Model model,
                            HttpServletRequest request) {
-        QuestionDTO questionDTO = questionService.findById(id);
+        Long questionId;
+        try {
+            questionId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new CustomizeException(CustomizeErrorCode.INVALID_INPUT);
+        }
+        QuestionDTO questionDTO = questionService.findById(questionId);
         model.addAttribute("question", questionDTO);
 
         // 查询相关问题
         List<QuestionDTO> relatedQuestions = questionService.selectRelated(questionDTO);
         model.addAttribute("relatedQuestions", relatedQuestions);
         // 增加阅读数
-        questionService.incView(id);
+        questionService.incView(questionId);
 
         // 查询评论
-        List<CommentReturnDTO> commentDTOS = commentService.listByParentId(id, CommentTypeEnum.QUESTION);
+        List<CommentReturnDTO> commentDTOS = commentService.listByParentId(questionId, CommentTypeEnum.QUESTION);
         model.addAttribute("comments", commentDTOS);
 
         // 获取用户未登录但评论的内容
@@ -48,7 +61,7 @@ public class QuestionController {
         // 如果评论内容不为空或者用户是未登陆状态
         if (StringUtils.isNotBlank(noLoginComment)) {
             // 回显未登录但评论的内容
-            model.addAttribute("noLoginComment",noLoginComment);
+            model.addAttribute("noLoginComment", noLoginComment);
             // 记得要删除cookie中的未登录但评论的内容
             session.removeAttribute("noLoginComment");
         }

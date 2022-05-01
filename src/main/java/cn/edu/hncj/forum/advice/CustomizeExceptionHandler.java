@@ -4,6 +4,7 @@ import cn.edu.hncj.forum.dto.ResultDTO;
 import cn.edu.hncj.forum.exception.CustomizeErrorCode;
 import cn.edu.hncj.forum.exception.CustomizeException;
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,6 +22,7 @@ import java.io.PrintWriter;
  * @author FanJian
  */
 @ControllerAdvice
+@Slf4j
 public class CustomizeExceptionHandler {
 
     @ExceptionHandler(Exception.class)
@@ -35,6 +37,7 @@ public class CustomizeExceptionHandler {
                 // [2002,"未选中任何问题或评论进行回复"]
                 resultDTO = ResultDTO.errorOf((CustomizeException) ex);
             } else {
+                log.error("handler error:{}", ex);
                 // [2004,"服务器冒烟了~~~"]
                 resultDTO = ResultDTO.errorOf(CustomizeErrorCode.SYS_ERROR);
             }
@@ -56,7 +59,7 @@ public class CustomizeExceptionHandler {
             if (ex instanceof CustomizeException) {
                 model.addAttribute("message", ex.getMessage());
             } else {
-		ex.printStackTrace();
+                log.error("handle error", ex);
                 model.addAttribute("message", "服务器冒烟了~~~");
             }
             return new ModelAndView("error");
