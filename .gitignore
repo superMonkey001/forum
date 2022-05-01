@@ -8,7 +8,7 @@ logs/
 nohup.out
 
 ### 配置文件以及导航条(和服务器不一致) ###
-/src/main/resources/application-production.proerties
+src/main/resources/application-production.properties
 /src/main/resources/application.properties
 /src/main/resources/templates/navigation.html
 
