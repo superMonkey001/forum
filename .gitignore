@@ -3,10 +3,15 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+### 日志信息 ###
 logs/
-src/main/resources/application.properties
-src/main/resources/application-production.properties
-src/main/resources/templates/navigation.html
+nohup.out
+
+### 配置文件以及导航条(和服务器不一致) ###
+/src/main/resources/application-production.proerties
+/src/main/resources/application.properties
+/src/main/resources/templates/navigation.html
+
 ### STS ###
 .apt_generated
 .classpath
@@ -34,3 +39,4 @@ build/
 
 ### VS Code ###
 .vscode/
+
