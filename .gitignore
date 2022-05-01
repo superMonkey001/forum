@@ -4,9 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 logs/
-/src/main/resources/application.properties
-/src/main/resources/application-production.properties
-/src/main/resources/templates/navigation.html
+src/main/resources/application.properties
+src/main/resources/application-production.properties
+src/main/resources/templates/navigation.html
 ### STS ###
 .apt_generated
 .classpath
