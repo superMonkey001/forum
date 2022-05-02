@@ -78,7 +78,7 @@ public class QuestionServiceImpl implements QuestionService {
 
         paginationDTO.setPagination(totalPage, page);
 
-        Integer offset = size * (page - 1);
+        Integer offset =  page < 1 ? 0 : size * (page - 1);
 
 
         questionQueryDTO.setOffset(offset);
@@ -130,6 +130,8 @@ public class QuestionServiceImpl implements QuestionService {
         }
         paginationDTO.setPagination(totalPage, page);
 
+        // 当page=0时，offset等于-8，如果按照自己的想法，sql语句应该是错的，
+        // 但是mybatis-generater在mapper的selectByExampleWithRowbounds方法中进行了offset小于零的判断(校验)
         Integer offset = size * (page - 1);
         QuestionExample questionExample1 = new QuestionExample();
         questionExample1.createCriteria().andCreatorEqualTo(id);
