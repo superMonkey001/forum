@@ -38,6 +38,11 @@ public class TagCache {
         tool.setCategoryName("开发工具");
         tool.setTags(Arrays.asList("git", "github", "visual-studio-code", "vim", "sublime-text", "xcode intellij-idea", "eclipse", "maven", "ide", "svn", "visual-studio", "atom emacs", "textmate", "hg"));
         tagDTOS.add(tool);
+
+        TagDTO other = new TagDTO();
+        other.setCategoryName("其他");
+        other.setTags(Arrays.asList("其他"));
+        tagDTOS.add(other);
         return tagDTOS;
     }
 

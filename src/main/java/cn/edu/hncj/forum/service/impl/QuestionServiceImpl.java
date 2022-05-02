@@ -80,7 +80,6 @@ public class QuestionServiceImpl implements QuestionService {
 
         Integer offset =  page < 1 ? 0 : size * (page - 1);
 
-
         questionQueryDTO.setOffset(offset);
         questionQueryDTO.setSize(size);
         List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);

@@ -75,13 +75,11 @@ public class CommentServiceImpl implements CommentService {
                 // 增加父级评论的评论数
                 commentExtMapper.incCommentCount(parentComment);
 
-
                 // 查询一级评论的父级问题
                 Question dbQuestion = questionMapper.selectByPrimaryKey(dbComment.getParentId());
                 if (dbQuestion == null) {
                     throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
                 }
-
 
                 // 新建通知
                 createNotification(comment, NotificationTypeEnum.REPLY_COMMENT, commentator.getName(), dbQuestion.getTitle(), dbComment.getCommentator(), dbQuestion.getId());

@@ -9,14 +9,18 @@
     <script src="/js/jquery-3.6.0.min.js"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
 </head>
-<body>
-<div th:insert="~{navigation :: navi}"></div>
+<body style="background: #efefef;">
 <!--  发布框以及发布指南  -->
-<div class="jumbotron">
-    <h1>出错啦!!!</h1>
-    <p th:text="${message}">服务器爆炸啦~~</p>
-    <p><a class="btn btn-primary btn-lg" href="/" role="button">回到主页</a></p>
+<div class="jumbotron" style="min-height: 300px;">
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        <h1>出错啦!!!</h1>
+        <p th:text="${message}">服务器爆炸啦~~</p>
+        <p><a class="btn btn-primary btn-lg" href="/" role="button">回到主页</a></p>
+    </div>
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        <img class="img-thumbnail" style="width: 35%;margin-bottom: 50px;" src="/images/首页二维码.png">
+    </div>
 </div>
-<div th:insert="~{footer :: foot}"></div>
+</div>
 </body>
 </html>

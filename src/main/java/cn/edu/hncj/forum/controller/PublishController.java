@@ -2,8 +2,6 @@ package cn.edu.hncj.forum.controller;
 
 import cn.edu.hncj.forum.cache.TagCache;
 import cn.edu.hncj.forum.dto.QuestionDTO;
-import cn.edu.hncj.forum.mapper.QuestionMapper;
-import cn.edu.hncj.forum.mapper.UserMapper;
 import cn.edu.hncj.forum.model.Question;
 import cn.edu.hncj.forum.model.User;
 import cn.edu.hncj.forum.service.QuestionService;
@@ -95,7 +93,7 @@ public class PublishController {
 
         String invalid = TagCache.filterInvalid(split);
         if (StringUtils.isNotBlank(invalid)) {
-            model.addAttribute("error", "输入了非法标签" + invalid);
+            model.addAttribute("error", "输入了非法标签" + invalid + "，或者标签中含有空格");
             return "publish";
         }
 
@@ -107,7 +105,6 @@ public class PublishController {
             model.addAttribute("error", "用户未登录");
             return "publish";
         }
-
 
         // 如果当前用户为登录状态，则把用户写的问题信息存入到数据库中
         Question question = new Question();

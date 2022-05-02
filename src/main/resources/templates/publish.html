@@ -64,18 +64,26 @@
         });
         $("#closeTags").click(function () {
             $("#tagTab").css("display", "none");
-        })
+        });
+        /**/
+        $(".hoverTag").click(function () {
+            $(".alert-danger").css("display","none");
+        });
+        $("input").on('input',function (e) {
+            $(".alert-danger").css("display","none");
+        });
     })
 </script>
 
+<!--接入markdown-->
 <script type="text/javascript">
     $(function () {
         var editor = editormd("question-editor", {
             width: "100%",
             height: 350,
             path: "/js/lib/",
-            watch:false,
-            placeholder:"请输入你的问题~",
+            watch: false,
+            placeholder: "请输入你的问题~",
             imageUpload: true,
             imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
             imageUploadURL: "/file/upload"
@@ -88,7 +96,7 @@
 <div class="container-fluid main">
     <div class="row">
         <!-- 发布框 -->
-        <div class="col-lg-9 col-md-9 col-sm-10 col-xs-12">
+        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
             <h2><span class="glyphicon" aria-hidden="true"></span>发起</h2>
             <hr>
             <form action="/publish" method="post">
@@ -105,7 +113,8 @@
                 <div class="form-group" id="question-editor">
                     <label for="description">问题补充</label>
                     <textarea class="form-control" name="description"
-                              id="description" cols="30" rows="10" style="display:none" th:text="${description}" autocomplete="off">
+                              id="description" cols="30" rows="10" style="display:none" th:text="${description}"
+                              autocomplete="off">
                     </textarea>
                 </div>
 
@@ -156,7 +165,7 @@
 
             </form>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-2 col-xs-12">
+        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
             <h3>问题发起指南</h3>
             • 问题标题: 请用精简的语言描述您发布的问题，不超过25字 <br>
             • 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料<br>

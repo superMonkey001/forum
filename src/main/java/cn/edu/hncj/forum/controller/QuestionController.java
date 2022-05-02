@@ -39,7 +39,7 @@ public class QuestionController {
         try {
             questionId = Long.parseLong(id);
         } catch (NumberFormatException e) {
-            throw new CustomizeException(CustomizeErrorCode.INVALID_INPUT);
+            throw new CustomizeException(CustomizeErrorCode.LINK_DOES_NOT_EXIST);
         }
         QuestionDTO questionDTO = questionService.findById(questionId);
         model.addAttribute("question", questionDTO);
