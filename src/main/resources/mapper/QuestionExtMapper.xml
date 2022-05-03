@@ -31,7 +31,7 @@
     <select id="countBySearch" parameterType="cn.edu.hncj.forum.mapper.vo.QuestionQueryDTO" resultType="java.lang.Integer">
         select count(*) from question
         <where>
-            <if test="search != null">
+            <if test="search != null and search != ''">
                 and lower(title) regexp #{search}
             </if>
         </where>
@@ -40,7 +40,7 @@
     <select id="selectBySearch" resultType="cn.edu.hncj.forum.model.Question" resultMap="BaseResultMap">
         select * from question
         <where>
-            <if test="search != null">
+            <if test="search != null and search != ''">
                 and lower(title) regexp #{search}
             </if>
         </where>
