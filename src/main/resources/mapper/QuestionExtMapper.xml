@@ -34,6 +34,9 @@
             <if test="search != null and search != ''">
                 and lower(title) regexp #{search}
             </if>
+            <if test="hotTag != null and hotTag != ''">
+                and tag regexp #{hotTag}
+            </if>
         </where>
     </select>
 
@@ -42,6 +45,9 @@
         <where>
             <if test="search != null and search != ''">
                 and lower(title) regexp #{search}
+            </if>
+            <if test="hotTag != null and hotTag != ''">
+                and tag regexp #{hotTag}
             </if>
         </where>
         order by gmt_create desc limit #{offset},#{size}
