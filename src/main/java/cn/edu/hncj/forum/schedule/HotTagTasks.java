@@ -33,7 +33,7 @@ public class HotTagTasks {
     /**
      * 定时：三十天
      */
-    @Scheduled(fixedRate = 1000 * 60 * 60 * 24 * 30)
+    @Scheduled(fixedRate = 259200000)
     public void hotTagSchedule() {
         log.info("The time is start {}", dateFormat.format(new Date()));
         int offset = 0;
