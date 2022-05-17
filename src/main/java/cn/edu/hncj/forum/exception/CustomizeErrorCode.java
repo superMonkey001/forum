@@ -16,7 +16,15 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     READ_NOTIFICATION_FAIL(2008, "你读的是别人的回复！！！"),
     NOTIFICATION_NOT_FOUND(2009, "消息不翼而飞啦~~~"),
     FILE_UPLOAD_FAIL(2010,"图片上传失败"),
-    LINK_DOES_NOT_EXIST(2011,"这个链接不存在!!")
+    LINK_DOES_NOT_EXIST(2011,"这个链接不存在!!"),
+    REGISTER_PARAM_NOT_NULL(2012,"参数不能为空"),
+    USER_IS_EXIST(2013,"用户已存在，请更换用户名"),
+    FORGET_PASSWORD_PARAM_NOT_NULL(2014,"请输入完全"),
+    USER_NOT_FOUND(2014,"查询不到当前用户"),
+    USER_OR_PASSWORD_ERROR(2015,"用户名或密码错误"),
+    USER_OR_PASSWORD_IS_NULL(2016,"用户名或密码为空"),
+    TOKEN_ERROR(2017,"token不合法"),
+    EMAIL_IS_USED(2018,"该邮箱已被注册")
     ;
 
     private String message;

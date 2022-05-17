@@ -109,7 +109,7 @@
   MT("userProjectSHAEmphasis",
      "[em *foo ][em&link bar/hello@be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2][em *]");
 
-  MT("num",
+  MT("name",
      "foo [link #1] bar");
 
   MT("numEmphasis",

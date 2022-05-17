@@ -12,7 +12,7 @@ public class ResultDTO<T> {
     private Integer code;
     private String message;
     private T data;
-
+    private String token;
     public static ResultDTO errorOf(Integer code, String message) {
         ResultDTO resultDTO = new ResultDTO();
         resultDTO.setCode(code);
@@ -37,7 +37,13 @@ public class ResultDTO<T> {
         resultDTO.setMessage("请求成功");
         return resultDTO;
     }
-
+    public static ResultDTO okOf(String message,String token) {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(200);
+        resultDTO.setMessage(message);
+        resultDTO.setToken(token);
+        return resultDTO;
+    }
     public static <T> ResultDTO okOf(T t) {
         ResultDTO resultDTO = new ResultDTO();
         resultDTO.setCode(200);

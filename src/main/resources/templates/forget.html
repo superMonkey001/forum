@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>聚码</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/forum.css">
+    <script src="/js/jquery-3.6.0.min.js"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+</head>
+<script>
+    var email;
+    var name;
+    $(function () {
+
+
+        $("a").click(function () {
+            name = $("input[name='name']").val();
+            emial = $("input[name='email']").val();
+            if (!name) {
+                alert("用户名不能为空");
+                return;
+            }
+            var patt1=new RegExp("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+$");
+            var test = patt1.test(emial);
+            // 如果校验失败
+            if (!test) {
+                alert("您的邮箱格式不合法");
+                return;
+            }
+            $.ajax({
+                type: 'get',
+                contentType: 'application/json',
+                url: '/login/sendEmail',
+                data: {'email': emial},
+                success: function (resp) {
+                    if (resp.code == 200) {
+                        alert(resp.message);
+                    } else {
+                        alert(resp.message);
+                    }
+                },
+                dataType: 'json'
+            })
+        });
+        $("#forgetThenUpdPwd").click(function () {
+
+            var checkCode = $("input[name='checkCode']").val();
+            var password = $("input[name='password']").val();
+            $.ajax({
+                type: 'put',
+                contentType: 'application/json',
+                url: '/login/password',
+                data: JSON.stringify({
+                    'name': name,
+                    'email': emial,
+                    'checkCode': checkCode,
+                    'password': password
+                }),
+                success: function (resp) {
+                    if (resp.code == 200) {
+                        if (confirm("修改成功，是否返回主页？")) {
+                            window.open("/");
+                        }
+                        window.close();
+                    } else if (resp.code == 444) {
+                        alert(resp.message);
+                    } else {
+                        alert(resp.message);
+                    }
+                },
+                dataType: 'json'
+            })
+        })
+    })
+</script>
+<body style="background: #efefef;">
+<div class="jumbotron" style="min-height: 300px;">
+    <div style="margin: auto;width: 250px;height: 350px;text-align: center;">
+        <img src="/images/favicon.png">
+        <h4>聚码</h4>
+        <div class="forgetPwd-box">
+            <input name="name" class="item" type="text" placeholder="输入您的用户名">
+            <div class="email-box item">
+                <input name="email" type="text" placeholder="输入您的邮箱"/>
+                <a href="javascript:void(0)" class="pull-left" style="margin-left: 5px">获取验证码</a>
+            </div>
+            <input class="item" name="checkCode" type="text" placeholder="请输入验证码">
+            <input class="item" name="password" type="text" placeholder="输入您的新密码">
+            <button id="forgetThenUpdPwd">
+                确认修改
+            </button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

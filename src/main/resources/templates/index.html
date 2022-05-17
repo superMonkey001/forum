@@ -53,7 +53,8 @@
                         </a>
                     </li>
                     <li th:if="${pagination.showPrevious}">
-                        <a th:href="@{/(page = ${pagination.page - 1},search=${search},hotTag=${hotTag})}" aria-label="Previous">
+                        <a th:href="@{/(page = ${pagination.page - 1},search=${search},hotTag=${hotTag})}"
+                           aria-label="Previous">
                             <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
@@ -64,12 +65,14 @@
                         <a th:href="@{/(page=${currentPage},search=${search},hotTag=${hotTag})}">[[${currentPage}]]</a>
                     </li>
                     <li th:if="${pagination.showNext}">
-                        <a th:href="@{/(page = ${pagination.page + 1},search=${search},hotTag=${hotTag})}" aria-label="Next">
+                        <a th:href="@{/(page = ${pagination.page + 1},search=${search},hotTag=${hotTag})}"
+                           aria-label="Next">
                             <span aria-hidden="true">&gt;</span>
                         </a>
                     </li>
                     <li th:if="${pagination.showEndPage}">
-                        <a th:href="@{/(page = ${pagination.totalPage},search=${search},hotTag=${hotTag})}" aria-label="Next">
+                        <a th:href="@{/(page = ${pagination.totalPage},search=${search},hotTag=${hotTag})}"
+                           aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
@@ -93,6 +96,7 @@
         </div><!--一大段文字-->
     </div>
 </div>
+
 
 <!--页脚-->
 <div th:insert="~{footer :: foot}"></div>

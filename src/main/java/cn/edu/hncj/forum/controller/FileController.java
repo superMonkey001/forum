@@ -4,8 +4,7 @@ import cn.edu.hncj.forum.dto.FileDTO;
 import cn.edu.hncj.forum.provider.UCloudProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -46,6 +45,28 @@ public class FileController {
         fileDTO = new FileDTO();
         fileDTO.setMessage("失败");
         fileDTO.setSuccess(0);
+        return fileDTO;
+    }
+
+    /**
+     * 用户上传头像
+     * @return url
+     */
+    @ResponseBody
+    @PostMapping("/upload/avatar")
+    public FileDTO uploadAvatar(@RequestParam("avatar") MultipartFile file) {
+        FileDTO fileDTO = new FileDTO();
+        try {
+            String fileUrl = uCloudProvider.upload(file.getInputStream(),file.getContentType(),file.getOriginalFilename());
+            fileDTO.setSuccess(1);
+            fileDTO.setMessage("上传成功");
+            fileDTO.setUrl(fileUrl);
+            return fileDTO;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        fileDTO.setSuccess(0);
+        fileDTO.setMessage("上传失败，请检查图片格式");
         return fileDTO;
     }
 }

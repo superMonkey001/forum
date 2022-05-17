@@ -40,8 +40,6 @@ body {
 }
 
 
-
-
 /*编辑*/
 .forum-menu {
     font-size: 13px;
@@ -190,10 +188,93 @@ body {
 /*通知数*/
 .badge {
     background-color: white;
-    color: black ;
+    color: black;
 }
 
 /*下拉三角*/
 .caret {
     color: white;
 }
+
+
+/*登录注册模态框*/
+.loginForm {
+    margin: 10px 20px;
+}
+
+.modal-footer {
+    margin-top: 20px;
+}
+
+.form-group {
+    position: relative;
+}
+
+
+
+
+
+
+
+
+
+
+
+.avatar-box {
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+}
+
+.input-file {
+
+    /*clip:rect(0,250px,100px,150px);*/
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+
+}
+
+.forgetPwd-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.email-box {
+    position: relative;
+}
+
+.email-box input {
+    width: 100%;
+
+}
+
+.email-box a {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+}
+
+input {
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc
+}
+
+.item {
+    margin-bottom: 10px;
+}
+
+#forgetThenUpdPwd {
+    width: 60%;
+    height: 30px;
+    margin: 0 auto;
+}
+
+
+/*页面晃动*/
+
