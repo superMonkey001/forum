@@ -38,12 +38,13 @@ public class QuestionServiceImpl implements QuestionService {
      * 查询到所有的QuestionDTO(包括User信息)
      *
      * @param search 搜索框中的内容
+     * @param hotTag 热门标签
      * @param page   当前页
      * @param size   当前长度
      * @return 返回当前页面的所有信息(questions, page, pages)
      */
     @Override
-    public PaginationDTO list(String search, Integer page, Integer size) {
+    public PaginationDTO list(String search, String hotTag, Integer page, Integer size) {
 
         // 如果搜索框中有内容
         if (StringUtils.isNotBlank(search)) {
@@ -55,11 +56,13 @@ public class QuestionServiceImpl implements QuestionService {
             search = Arrays.stream(split).map(String::toLowerCase).collect(Collectors.joining("|"));
         }
 
+
         PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
         Integer totalPage;
         // 一共有多少问题
         QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
         questionQueryDTO.setSearch(search);
+        questionQueryDTO.setHotTag(hotTag);
         Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
         if (totalCount % size == 0) {
             totalPage = totalCount / size;

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface QuestionService {
 
-    PaginationDTO list(String search, Integer page, Integer size);
+    PaginationDTO list(String search, String hotTag, Integer page, Integer size);
 
     /**
      * @param id   当前用户的id
