@@ -22,7 +22,7 @@
 
         $(function () {
             // 图片回显功能
-            $("input[type='file']").change(function () {
+            $("#uploadForm input[type='file']").change(function () {
                 $('#registerModal').modal('hide');
                 $('#ulImgModal').modal({});
                 var oFReader = new FileReader();
@@ -33,7 +33,17 @@
                     $('#ulAvatar').attr('src', src);
                 }
             });
-
+            $("#uploadInput2").change(function () {
+                $('#registerModal').modal('hide');
+                $('#ulImgModal').modal({});
+                var oFReader = new FileReader();
+                var file = document.getElementById('uploadInput2').files[0];
+                oFReader.readAsDataURL(file);
+                oFReader.onloadend = function (oFRevent) {
+                    var src = oFRevent.target.result;
+                    $('#ulAvatar').attr('src', src);
+                }
+            });
 
             // 注册
             $("#registerBtn").click(function () {
@@ -304,7 +314,7 @@
     </nav>
     <!-- 登录的Modal -->
     <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
-        <div class="modal-dialog" role="document" style="margin-top: 100px;width: 300px">
+        <div class="modal-dialog" role="document" style="margin: 100px auto;width: 300px">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -362,7 +372,7 @@
     </div>
     <!-- 注册的Modal -->
     <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel2">
-        <div class="modal-dialog" role="document" style="margin-top: 100px;width: 300px">
+        <div class="modal-dialog" role="document" style="margin: 100px auto;width: 300px">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -424,7 +434,7 @@
     <!-- 上传头像的Modal -->
     <!-- Modal -->
     <div class="modal fade" id="ulImgModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel3">
-        <div class="modal-dialog" role="document" style="margin-top: 100px;width: 300px">
+        <div class="modal-dialog" role="document" style="margin: 100px auto;width: 300px">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -432,7 +442,14 @@
                     <h4 class="modal-title" id="loginModalLabel3">上传头像</h4>
                 </div>
                 <div class="modal-body">
-                    <img id="ulAvatar" class="media-object img-circle" src="/images/anonymous.png">
+                    <div style="position: absolute;top: 12px;left: 26px;">
+                        <span style="font-size: 16px;">更换图片：</span>
+                    </div>
+                    <img id="ulAvatar" class="media-object img-circle" style="margin: auto;width: 90px;height: 90px;" src="/images/anonymous.png">
+                    <div class="avatar-box" style="top: 15px;left: 104px;height: 90px;width: 90px;border-radius: 50%;">
+                        <input name="avatar" type="file" accept="image/png;image/jpg" class="input-file"
+                               id="uploadInput2" placeholder="图片地址" autocomplete="off">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" onclick="showRegisterModal()" data-dismiss="modal">
