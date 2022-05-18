@@ -23,8 +23,10 @@
         $(function () {
             // 图片回显功能
             $("#avatarForm input[type='file']").change(function () {
+                // 把头像表单的文件值属性传给上传表单
                 $('#registerModal').modal('hide');
                 $('#ulImgModal').modal({});
+                // $("#uploadForm input[type='file']").val($("#avatarForm input[type='file']").val());
                 var oFReader = new FileReader();
                 var file = document.getElementById('uploadInput').files[0];
                 oFReader.readAsDataURL(file);
@@ -33,6 +35,7 @@
                     $('#ulAvatar').attr('src', src);
                 }
             });
+            // 图片回显的功能
             $("#uploadInput2").change(function () {
                 var oFReader = new FileReader();
                 var file = document.getElementById('uploadInput2').files[0];
@@ -204,7 +207,17 @@
         // 图片上传
         uploadImg = function () {
             var uploadForm = document.getElementById("uploadForm");
-            var formData = new FormData(uploadForm);
+            var formData;
+            debugger;
+            // 如果是从注册表单的图片，那么上传表单的input就没有值
+            if (!$("#uploadForm input[type='file']").val()) {
+                // 那么就把注册表单的图片赋值给formData
+                var avatarForm = document.getElementById("avatarForm");
+                formData = new FormData(avatarForm);
+            }else {
+                formData = new FormData(uploadForm);
+            }
+            debugger;
             $.ajax({
                 type: "post",
                 url: "/file/upload/avatar",
@@ -212,10 +225,12 @@
                 processData: false,
                 data: formData,
                 success: function (resp) {
+                    debugger;
                     if (resp.success == 1) {
                         var echoAvatar = document.getElementById("echoAvatar");
                         var url = resp.url;
                         echoAvatar.src = url;
+                        console.log(url);
                         $("input[name='avatar_url']").val(url);
                         alert(resp.message);
                     } else if (resp.success == 0) {
@@ -227,13 +242,17 @@
                     }
                     $('#ulImgModal').modal('hide');
                     $('#registerModal').modal('show');
+                    // 上传成功后，把上传表单的值清空
+                    $("#uploadForm input[type='file']").val("")
                 },
                 error: function () {
                     alert("上传图片失败，请重试");
+                    // 上传失败后，把上传表单的值清空
+                    $("#uploadForm input[type='file']").val("")
                 },
                 dataType: 'json'
             })
-        }
+        };
 
         // 当注册modal中的输入框有所改变就把error信息隐藏了
         function hideRegisterError() {
@@ -254,9 +273,15 @@
             $('#loginModal').modal('hide');
         }
 
-        // 展示注册modal
-        function showRegisterModal() {
+
+        // 打开注册modal并清除头像上传input的值
+        function shwRegModAndRmUlInp() {
             $('#registerModal').modal('show');
+            rmUlInpVal();
+        }
+        // 清除头像上传input的值
+        function rmUlInpVal() {
+            $("#uploadForm input[type='file']").val("");
         }
 
     </script>
@@ -433,11 +458,11 @@
     </div>
     <!-- 上传头像的Modal -->
     <!-- Modal -->
-    <div class="modal fade" id="ulImgModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel3">
+    <div onclose="rmUlInpVal()" onblur="rmUlInpVal()" class="modal fade" id="ulImgModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel3">
         <div class="modal-dialog" role="document" style="margin: 100px auto;width: 300px">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    <button onclick="rmUlInpVal()" type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="loginModalLabel3">上传头像</h4>
                 </div>
@@ -456,7 +481,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" onclick="showRegisterModal()" data-dismiss="modal">
+                    <button type="button" class="btn btn-default" onclick="shwRegModAndRmUlInp()"  data-dismiss="modal">
                         取消
                     </button>
                     <button id="upload" class="btn btn-primary" onclick="uploadImg()">上传并保存</button>
