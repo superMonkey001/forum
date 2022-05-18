@@ -282,3 +282,12 @@ body {
 .modal-open  {
     overflow-y: scroll;
 }
+
+
+/*优化手机端页面*/
+.navbar-form {
+    border: 0;
+}
+.navbar-collapse {
+    border: 0;
+}
