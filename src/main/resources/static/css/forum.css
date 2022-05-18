@@ -211,15 +211,6 @@ body {
 }
 
 
-
-
-
-
-
-
-
-
-
 .avatar-box {
     position: absolute;
     top: 1px;
@@ -276,5 +267,10 @@ input {
 }
 
 
-/*页面晃动*/
-
+/*解决模态框页面晃动*/
+body {
+    padding-right: 0px !important;
+}
+.modal-open  {
+    overflow-y: scroll;
+}

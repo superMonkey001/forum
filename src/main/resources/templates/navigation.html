@@ -34,6 +34,7 @@
                 }
             });
 
+
             // 注册
             $("#registerBtn").click(function () {
                 var name = $("#registerForm input[name='name']").val();
@@ -42,6 +43,9 @@
                 var password = $("#registerForm input[name='password']").val();
                 var userDTO = {name: name, password: password, email: email, avatar_url: avatar_url};
                 var error = $("#registerModal .alert-danger");
+                if (!chkRegVld(error,name, password, email)) {
+                    return;
+                }
                 console.log(userDTO);
                 $.ajax({
                     type: "post",
@@ -92,7 +96,7 @@
                         if (resp.code == 200) {
                             var token = localStorage.getItem("token");
                             var respToken = resp.token;
-                            console.log("传过去的token"+resp.token);
+                            console.log("传过去的token" + resp.token);
                             // 如果本地缓存中已经有token，那么就说明token没有失效。
                             // 本地缓存中已经有token的情况
                             // 1.已经登陆过，且没有退出登录
@@ -111,10 +115,10 @@
                                     success: function (resp) {
                                         // debugger;
                                         // 存入当前用户token
-                                        localStorage.setItem("token",resp.token);
+                                        localStorage.setItem("token", resp.token);
                                         location.reload();
                                     },
-                                    error: function() {
+                                    error: function () {
                                         // debugger;
                                     },
                                     dataType: 'json'
@@ -152,7 +156,37 @@
                     dataType: 'json'
                 })
             })
+
+
         });
+
+        // 注册校验
+        function chkRegVld(error,name, password, email) {
+            debugger;
+            // 如果用户名为空
+            if (!name) {
+                // 显现错误信息
+                error.css("display", "");
+                error.text("用户名不能为空");
+                return false;
+            }
+            if (!password) {
+                // 显现错误信息
+                error.css("display", "");
+                error.text("密码不能为空");
+                return false;
+            }
+            var regExp = new RegExp("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+$");
+            var test = regExp.test(email);
+            // 如果校验失败
+            if (!test) {
+                // 显现错误信息
+                error.css("display", "");
+                error.text("您的邮箱格式不合法");
+                return false;
+            }
+            return true;
+        }
 
         // 添加cookie
         var addCookie = function (name, value) {
@@ -195,21 +229,23 @@
 
         // 当注册modal中的输入框有所改变就把error信息隐藏了
         function hideRegisterError() {
-                $("#registerModal .alert-danger").css("display","none");
+            $("#registerModal .alert-danger").css("display", "none");
         }
 
         function hideLoginError() {
-            $("#loginModal .alert-danger").css("display","none");
+            $("#loginModal .alert-danger").css("display", "none");
         }
 
         // 展示登录modal
         function showLoginModal() {
             $('#loginModal').modal('show');
         }
+
         // 关闭登录modal
         function closeLoginModal() {
             $('#loginModal').modal('hide');
         }
+
         // 展示注册modal
         function showRegisterModal() {
             $('#registerModal').modal('show');
@@ -268,7 +304,7 @@
     </nav>
     <!-- 登录的Modal -->
     <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
-        <div class="modal-dialog" role="document" style="margin-top: 200px;width: 300px">
+        <div class="modal-dialog" role="document" style="margin-top: 100px;width: 300px">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -281,13 +317,15 @@
                             <label for="nameInput">昵称
                                 <!--<span class="error" th:text="${error}"></span>-->
                             </label>
-                            <input oninput="hideLoginError()" type="text" name="name" class="form-control" id="nameInput" placeholder="name"
+                            <input oninput="hideLoginError()" type="text" name="name" class="form-control"
+                                   id="nameInput" placeholder="name"
 
                                    autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">密码</label>
-                            <input oninput="hideLoginError()" type="password" name="password" class="form-control" id="exampleInputPassword1"
+                            <input oninput="hideLoginError()" type="password" name="password" class="form-control"
+                                   id="exampleInputPassword1"
                                    placeholder="Password">
                         </div>
                     </form>
@@ -298,7 +336,8 @@
                     <h5>
                         <a href="/login/forget">忘记密码</a>
                     </h5>
-                    <div class="alert alert-danger" style="display:none;float:left;font-size: 13px;padding: 3px;margin: 0;width: auto;">
+                    <div class="alert alert-danger"
+                         style="display:none;float:left;font-size: 13px;padding: 3px;margin: 0;width: auto;">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -323,7 +362,7 @@
     </div>
     <!-- 注册的Modal -->
     <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel2">
-        <div class="modal-dialog" role="document" style="margin-top: 200px;width: 300px">
+        <div class="modal-dialog" role="document" style="margin-top: 100px;width: 300px">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -351,28 +390,32 @@
                             <label for="regInp">昵称
                                 <!--<span class="error" th:text="${error}"></span>-->
                             </label>
-                            <input oninput="hideRegisterError()" type="text" name="name" class="form-control" id="regInp"
+                            <input oninput="hideRegisterError()" type="text" name="name" class="form-control"
+                                   id="regInp"
                                    placeholder="name"
                                    autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label for="registerPasswordInput">密码</label>
-                            <input type="password" name="password" class="form-control" id="registerPasswordInput"
+                            <input oninput="hideRegisterError()" type="password" name="password" class="form-control" id="registerPasswordInput"
                                    placeholder="Password">
                         </div>
                         <div class="form-group">
                             <label for="registerEmailInput">邮箱(请务必检查邮箱是否填写正确)</label>
-                            <input type="email" name="email" class="form-control" id="registerEmailInput"
+                            <input oninput="hideRegisterError()" type="email" name="email" class="form-control" id="registerEmailInput"
                                    placeholder="email">
                         </div>
                     </form>
-                    <div class="alert alert-danger" style="display:none;float:left;font-size: 13px;padding: 3px;margin: 0;width: auto;">
+                    <div class="alert alert-danger"
+                         style="display:none;float:left;font-size: 13px;padding: 3px;margin: 0;width: auto;">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <div>
-                        <button id="registerBtn" type="button"  class="btn btn-primary">注册</button>
-                        <button type="button" class="btn btn-default" onclick="showLoginModal()" data-dismiss="modal">取消</button>
+                        <button id="registerBtn" type="button" class="btn btn-primary">注册</button>
+                        <button type="button" class="btn btn-default" onclick="showLoginModal()" data-dismiss="modal">
+                            取消
+                        </button>
                     </div>
                 </div>
             </div>
@@ -381,7 +424,7 @@
     <!-- 上传头像的Modal -->
     <!-- Modal -->
     <div class="modal fade" id="ulImgModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel3">
-        <div class="modal-dialog" role="document" style="margin-top: 200px;width: 300px">
+        <div class="modal-dialog" role="document" style="margin-top: 100px;width: 300px">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -392,7 +435,9 @@
                     <img id="ulAvatar" class="media-object img-circle" src="/images/anonymous.png">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" onclick="showRegisterModal()" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-default" onclick="showRegisterModal()" data-dismiss="modal">
+                        取消
+                    </button>
                     <button id="upload" class="btn btn-primary" onclick="uploadImg()">上传并保存</button>
                 </div>
             </div>
