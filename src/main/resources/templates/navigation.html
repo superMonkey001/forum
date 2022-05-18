@@ -22,7 +22,7 @@
 
         $(function () {
             // 图片回显功能
-            $("#uploadForm input[type='file']").change(function () {
+            $("#avatarForm input[type='file']").change(function () {
                 $('#registerModal').modal('hide');
                 $('#ulImgModal').modal({});
                 var oFReader = new FileReader();
@@ -34,8 +34,6 @@
                 }
             });
             $("#uploadInput2").change(function () {
-                $('#registerModal').modal('hide');
-                $('#ulImgModal').modal({});
                 var oFReader = new FileReader();
                 var file = document.getElementById('uploadInput2').files[0];
                 oFReader.readAsDataURL(file);
@@ -53,7 +51,7 @@
                 var password = $("#registerForm input[name='password']").val();
                 var userDTO = {name: name, password: password, email: email, avatar_url: avatar_url};
                 var error = $("#registerModal .alert-danger");
-                if (!chkRegVld(error,name, password, email)) {
+                if (!chkRegVld(error, name, password, email)) {
                     return;
                 }
                 console.log(userDTO);
@@ -171,7 +169,7 @@
         });
 
         // 注册校验
-        function chkRegVld(error,name, password, email) {
+        function chkRegVld(error, name, password, email) {
             debugger;
             // 如果用户名为空
             if (!name) {
@@ -380,7 +378,7 @@
                     <h4 class="modal-title" id="loginModalLabel2">注册</h4>
                 </div>
                 <div class="loginForm modal-body">
-                    <form id="uploadForm" method="post" enctype="multipart/form-data" action="#">
+                    <form id="avatarForm" method="post" enctype="multipart/form-data" action="#">
                         <span>请选择头像:</span>
                         <div class="form-group">
                             <label for="uploadInput" class="avatar-box"
@@ -407,12 +405,14 @@
                         </div>
                         <div class="form-group">
                             <label for="registerPasswordInput">密码</label>
-                            <input oninput="hideRegisterError()" type="password" name="password" class="form-control" id="registerPasswordInput"
+                            <input oninput="hideRegisterError()" type="password" name="password" class="form-control"
+                                   id="registerPasswordInput"
                                    placeholder="Password">
                         </div>
                         <div class="form-group">
                             <label for="registerEmailInput">邮箱(请务必检查邮箱是否填写正确)</label>
-                            <input oninput="hideRegisterError()" type="email" name="email" class="form-control" id="registerEmailInput"
+                            <input oninput="hideRegisterError()" type="email" name="email" class="form-control"
+                                   id="registerEmailInput"
                                    placeholder="email">
                         </div>
                     </form>
@@ -442,14 +442,18 @@
                     <h4 class="modal-title" id="loginModalLabel3">上传头像</h4>
                 </div>
                 <div class="modal-body">
-                    <div style="position: absolute;top: 12px;left: 26px;">
-                        <span style="font-size: 16px;">更换图片：</span>
-                    </div>
-                    <img id="ulAvatar" class="media-object img-circle" style="margin: auto;width: 90px;height: 90px;" src="/images/anonymous.png">
-                    <div class="avatar-box" style="top: 15px;left: 104px;height: 90px;width: 90px;border-radius: 50%;">
-                        <input name="avatar" type="file" accept="image/png;image/jpg" class="input-file"
-                               id="uploadInput2" placeholder="图片地址" autocomplete="off">
-                    </div>
+                    <form id="uploadForm" method="post" enctype="multipart/form-data" action="#">
+                        <div style="position: absolute;top: 12px;left: 26px;">
+                            <span style="font-size: 16px;">更换图片：</span>
+                        </div>
+                        <img id="ulAvatar" class="media-object img-circle"
+                             style="margin: auto;width: 90px;height: 90px;" src="/images/anonymous.png">
+                        <div class="avatar-box"
+                             style="top: 15px;left: 104px;height: 90px;width: 90px;border-radius: 50%;">
+                            <input name="avatar" type="file" accept="image/png;image/jpg" class="input-file"
+                                   id="uploadInput2" placeholder="图片地址" autocomplete="off">
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" onclick="showRegisterModal()" data-dismiss="modal">
