@@ -88,8 +88,6 @@
                 var userDTO = {'name': name, 'password': password};
                 var token = localStorage.getItem("token");
                 var error = $("#loginModal .alert-danger");
-                console.log(token);
-                debugger;
                 // 如果token为null
                 if (token === null) {
                     token = "";
@@ -381,7 +379,7 @@
                     <span>第三方登录：</span>
                     <!--<a href="https://github.com/login/oauth/authorize?client_id=7b8e0403167f8fef70f3&redirect_uri=http://localhost:8887/callback/github&scope`=user&state=1"><img
                             src="/images/github.png"></a>-->
-                    <a th:href="@{https://github.com/login/oauth/authorize(client_id=${#httpServletRequest.getServletContext().getAttribute('githubClientId')},redirect_uri=${#httpServletRequest.getServletContext().getAttribute('githubRedirectUri')},scope='user',state=1)}">
+                    <a id="githubLink" th:href="@{https://github.com/login/oauth/authorize(client_id=${#httpServletRequest.getServletContext().getAttribute('githubClientId')},redirect_uri=${#httpServletRequest.getServletContext().getAttribute('githubRedirectUri')},scope='user',state=1)}">
                         <img src="/images/github.png">
                     </a>
                     <a th:href="@{https://gitee.com/oauth/authorize(client_id=${#httpServletRequest.getServletContext().getAttribute('giteeClientId')},redirect_uri=${#httpServletRequest.getServletContext().getAttribute('giteeRedirectUri')},response_type='code')}">
@@ -404,13 +402,13 @@
                 </div>
                 <div class="loginForm modal-body">
                     <form id="avatarForm" method="post" enctype="multipart/form-data" action="#">
-                        <span>请选择头像:</span>
+                        <span style="font-weight: bold;">换头像:</span>
                         <div class="form-group">
                             <label for="uploadInput" class="avatar-box"
                                    style="overflow: hidden;margin: 0; font-size: 0">点我选择头像
                             </label>
                             <!--回显的头像-->
-                            <img id="echoAvatar" class="media-object img-circle" src="/images/anonymous.png">
+                            <img id="echoAvatar" class="media-object img-circle" src="/images/默认头像.png">
                             <div class="avatar-box">
                                 <input name="avatar" type="file" accept="image/png;image/jpg" class="input-file"
                                        id="uploadInput" placeholder="图片地址" autocomplete="off">

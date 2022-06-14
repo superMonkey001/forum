@@ -13,4 +13,8 @@ public class Test {
         String s = DigestUtils.md5Hex("111cd7d9b");
         System.out.println(s);
     }
+
+    public static void main(String[] args) {
+
+    }
 }

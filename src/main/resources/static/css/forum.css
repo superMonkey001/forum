@@ -210,8 +210,13 @@ body {
     position: relative;
 }
 
+#githubLink:hover {
+    text-decoration: none;
+}
 
-
+#uploadInput:hover {
+    cursor: pointer;
+}
 
 
 
@@ -291,3 +296,4 @@ body {
 .navbar-collapse {
     border: 0;
 }
+
