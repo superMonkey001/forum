@@ -1,6 +1,8 @@
 package cn.edu.hncj.forum.controller;
 
+import cn.edu.hncj.forum.cache.HistoryCache;
 import cn.edu.hncj.forum.dto.PaginationDTO;
+import cn.edu.hncj.forum.dto.QuestionDTO;
 import cn.edu.hncj.forum.model.User;
 import cn.edu.hncj.forum.service.NotificationService;
 import cn.edu.hncj.forum.service.QuestionService;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ProfileController {
@@ -49,6 +54,30 @@ public class ProfileController {
             PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
             model.addAttribute("section", "replies");
             model.addAttribute("sectionName", "最新回复");
+            model.addAttribute("pagination", paginationDTO);
+        }// 如果用户点击的是“浏览历史”
+        else if ("histories".equals(action)) {
+            HistoryCache historyCache = (HistoryCache) request.getSession().getAttribute("historyCache");
+            HistoryCache.DoubleLinkedList linkedList = historyCache.linkedList;
+
+            // 遍历链表，然后加进List中
+            List<QuestionDTO> questionDTOs = new ArrayList<>();
+            HistoryCache.Node node = linkedList.tail.pre;
+            while (node != linkedList.head) {
+                questionDTOs.add((QuestionDTO) node.val);
+                node = node.pre;
+            }
+
+            PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO();
+            paginationDTO.setData(questionDTOs);
+            paginationDTO.setPage(0);
+            paginationDTO.setTotalPage(1);
+            paginationDTO.setShowPrevious(false);
+            paginationDTO.setShowNext(false);
+            paginationDTO.setShowFirstPage(false);
+            paginationDTO.setShowEndPage(false);
+            model.addAttribute("section","histories");
+            model.addAttribute("sectionName","历史记录");
             model.addAttribute("pagination", paginationDTO);
         }
 

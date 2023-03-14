@@ -1,5 +1,6 @@
 package cn.edu.hncj.forum.controller;
 
+import cn.edu.hncj.forum.cache.HistoryCache;
 import cn.edu.hncj.forum.dto.CommentReturnDTO;
 import cn.edu.hncj.forum.dto.QuestionDTO;
 import cn.edu.hncj.forum.enums.CommentTypeEnum;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class QuestionController {
@@ -41,7 +43,16 @@ public class QuestionController {
         } catch (NumberFormatException e) {
             throw new CustomizeException(CustomizeErrorCode.LINK_DOES_NOT_EXIST);
         }
-        QuestionDTO questionDTO = questionService.findById(questionId);
+        HistoryCache historyCache = (HistoryCache) request.getSession().getAttribute("historyCache");
+        HistoryCache.Node node = historyCache.get(questionId);
+        QuestionDTO questionDTO;
+        if (node != null) {
+            questionDTO = (QuestionDTO) node.val;
+        } else {
+            questionDTO = questionService.findById(questionId);
+            // 添加浏览记录到缓存中
+            historyCache.put(questionDTO.getId(), questionDTO);
+        }
         model.addAttribute("question", questionDTO);
 
         // 查询相关问题

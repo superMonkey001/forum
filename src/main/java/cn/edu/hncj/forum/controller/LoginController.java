@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 public class LoginController {
 
     @Autowired
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     private UserService userService;
@@ -43,11 +43,11 @@ public class LoginController {
 
     @PostMapping
     @ResponseBody
-    public ResultDTO login(@RequestBody CustomUserDTO customUserDTO,@RequestHeader("Authorization") String token) {
+    public ResultDTO login(@RequestBody CustomUserDTO customUserDTO, @RequestHeader("Authorization") String token) {
         // 先走缓存，如果缓存中有数据，直接返回结果
         User redisUser = userService.checkToken(token);
-        if (redisUser!=null) {
-            return ResultDTO.okOf("登录成功",token);
+        if (redisUser != null) {
+            return ResultDTO.okOf("登录成功", token);
         }
         String name = customUserDTO.getName();
         String password = customUserDTO.getPassword();
@@ -60,12 +60,12 @@ public class LoginController {
         }
         String salt = userByName.getSalt();
         String dbPassword = DigestUtils.md5Hex(password + salt);
-        User user =userService.findUserByNameAndPassword(name,dbPassword);
+        User user = userService.findUserByNameAndPassword(name, dbPassword);
         if (user != null) {
             String newToken = JWTUtils.createToken(user.getId());
             /// System.out.println("后台token=================:"+newToken);
-            redisTemplate.opsForValue().set("TOKEN_"+newToken, JSON.toJSONString(user),1, TimeUnit.DAYS);
-            return ResultDTO.okOf("登录成功",newToken);
+            redisTemplate.opsForValue().set("TOKEN_" + newToken, JSON.toJSONString(user), 1, TimeUnit.DAYS);
+            return ResultDTO.okOf("登录成功", newToken);
         }
         return ResultDTO.errorOf(CustomizeErrorCode.USER_OR_PASSWORD_ERROR);
     }
@@ -96,15 +96,15 @@ public class LoginController {
                 return ResultDTO.okOf();
             }
         }
-        return ResultDTO.errorOf(444,"验证码错误");
+        return ResultDTO.errorOf(444, "验证码错误");
     }
 
     @ResponseBody
     @GetMapping("/sendEmail")
     public ResultDTO sendEmail(@RequestParam String email) {
         String checkCode = UUID.randomUUID().toString().substring(0, 6);
-        MailUtils.sendMail(email,"您的验证码为" + checkCode + "验证码有效期为一分钟,请尽快修改","修改密码");
-        redisTemplate.opsForValue().set("CHECKCODE_" + email,checkCode,60,TimeUnit.SECONDS);
+        MailUtils.sendMail(email, "您的验证码为" + checkCode + "验证码有效期为一分钟,请尽快修改", "修改密码");
+        redisTemplate.opsForValue().set("CHECKCODE_" + email, checkCode, 60, TimeUnit.SECONDS);
         return ResultDTO.okOf();
     }
 
@@ -132,6 +132,6 @@ public class LoginController {
         user.setEmail(email);
         user.setPassword(password);
         String token = userService.createUserAndReturnToken(user);
-        return ResultDTO.okOf("注册成功",token);
+        return ResultDTO.okOf("注册成功", token);
     }
 }

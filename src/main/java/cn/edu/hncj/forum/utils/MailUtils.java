@@ -18,7 +18,7 @@ public final class MailUtils {
     /**
      * 如果是qq邮箱可以使户端授权码，或者登录密码
      */
-    private static final String PASSWORD = "pymrkuofwjbldcda";
+    private static final String PASSWORD = "jdduqndnpkoodedb";
 
     /**
      * 发送验证信息的邮件
@@ -75,7 +75,7 @@ public final class MailUtils {
     }
 
     public static void main(String[] args) throws Exception { // 做测试用
-        MailUtils.sendMail("2775256803@qq.com","你好，这是一封测试邮件，无需回复。","测试邮件");
+        MailUtils.sendMail("3102405586@qq.com","你好，这是一封测试邮件，无需回复。","测试邮件");
         System.out.println("发送成功");
     }
 

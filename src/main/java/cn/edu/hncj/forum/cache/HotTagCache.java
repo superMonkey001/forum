@@ -32,7 +32,7 @@ public class HotTagCache {
                 priorityQueue.add(hotTagDTO);
             } else {
                 HotTagDTO minHotTagDTO = priorityQueue.peek();
-                // 如果当前遍历到的标签的热度比热门标签队列中的头部（相对最不热的标签）大的话，那么就将头部去除，并且把当前标签放置头部
+                // 如果当前遍历到的标签的热度比热门标签队列中的头部（相对最不热的标签）大的话，那么就将头部去除，并且把当前标签加入到堆中
                 if (hotTagDTO.getPriority().compareTo(minHotTagDTO.getPriority()) > 0) {
                     priorityQueue.poll();
                     priorityQueue.add(hotTagDTO);
