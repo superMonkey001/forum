@@ -131,6 +131,7 @@ public class AuthoriseController {
         }
         // 清除用户登录态
         session.removeAttribute("user");
+        session.removeAttribute("historyCache");
 
         // 清除token
         Cookie cookie = new Cookie("token", "");

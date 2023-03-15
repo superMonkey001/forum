@@ -57,6 +57,8 @@ public class ProfileController {
             model.addAttribute("pagination", paginationDTO);
         }// 如果用户点击的是“浏览历史”
         else if ("histories".equals(action)) {
+            // 这里的historyCache不用判断null，因为能访问到这个接口，说明用户已经登录了(因为登录后才能查看浏览记录)，
+            // 所以肯定会经过拦截器中的setAttribute("historyCache")
             HistoryCache historyCache = (HistoryCache) request.getSession().getAttribute("historyCache");
             HistoryCache.DoubleLinkedList linkedList = historyCache.linkedList;
 

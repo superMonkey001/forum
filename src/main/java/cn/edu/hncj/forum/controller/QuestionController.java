@@ -44,7 +44,10 @@ public class QuestionController {
             throw new CustomizeException(CustomizeErrorCode.LINK_DOES_NOT_EXIST);
         }
         HistoryCache historyCache = (HistoryCache) request.getSession().getAttribute("historyCache");
-        HistoryCache.Node node = historyCache.get(questionId);
+        HistoryCache.Node node = null;
+        if (historyCache != null) {
+            node = historyCache.get(questionId);
+        }
         QuestionDTO questionDTO;
         if (node != null) {
             questionDTO = (QuestionDTO) node.val;
