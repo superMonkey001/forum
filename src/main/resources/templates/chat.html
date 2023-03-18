@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+
+
+        var socket;
+        //判断当前浏览器是否支持websocket
+        if (window.WebSocket) {
+            //go on
+            socket = new WebSocket("ws://localhost:11111/chat");
+            //相当于channelReado, ev 收到服务器端回送的消息
+            socket.onmessage = function (ev) {
+                var rt = document.getElementById("responseText");
+                rt.value = rt.value + "\n" + ev.data;
+            }
+
+            //相当于连接开启(感知到连接开启)
+            socket.onopen = function () {
+                console.log("websocket连接已建立...");
+                // 获取我的信息
+                var sendId = $('#sendId').val;
+                var recId = $('#recId').val;
+                // 构建ChatMsg
+                var chatMsg = {
+                    senderId: sendId,
+                    receiverId: recId,
+                    msg: "",
+                }
+                // 构建DataContent
+                var dataContent = {
+                    action: 1,
+                    chatMsg: chatMsg,
+                    extand: null
+                };
+                // 发送websocket
+                socket.send(JSON.stringify(dataContent));
+                // 定时发送心跳
+                setInterval("CHAT.keepalive()", 10000);
+            }
+
+            //相当于连接关闭(感知到连接关闭)
+            socket.onclose = function (ev) {
+                var rt = document.getElementById("responseText");
+                rt.value = rt.value + "\n" + "连接关闭了.."
+            }
+        } else {
+            alert("当前浏览器不支持websocket")
+        }
+
+        //发送消息到服务器
+        function send(message) {
+            if (!window.socket) { //先判断socket是否创建好
+                return;
+            }
+            if (socket.readyState == WebSocket.OPEN) {
+                console.log("用户发送消息...");
+                //通过socket 发送消息
+                // 获取我的信息
+                var sendId = $('#sendId').val;
+                var recId = $('#recId').val;
+                var messageJson = JSON.stringify(message);
+
+                // 构建ChatMsg
+                var chatMsg = {
+                    senderId: sendId,
+                    receiverId: recId,
+                    msg: messageJson,
+                }
+                // 构建DataContent
+                var dataContent = {
+                    action: 2,
+                    chatMsg: chatMsg,
+                    extand: null
+                };
+                // 发送websocket
+                socket.send(JSON.stringify(dataContent));
+            } else {
+                alert("连接没有开启");
+            }
+        }
+    </script>
+</head>
+<body>
+<input type="hidden" th:value="${sendId}" id="sendId">
+<input type="hidden" th:value="${recId}" id="recId">
+<form onsubmit="return false">
+    <textarea name="message" style="height: 300px; width: 300px"></textarea>
+    <input type="button" value="发送" onclick="send(this.form.message.value)">
+    <textarea id="responseText" style="height: 300px; width: 300px"></textarea>
+    <input type="button" value="清空内容" onclick="document.getElementById('responseText').value=''">
+</form>
+</body>
+</html>

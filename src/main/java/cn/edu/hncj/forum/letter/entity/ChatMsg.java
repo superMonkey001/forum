@@ -18,7 +18,5 @@ public class ChatMsg implements Serializable {
 	private Long receiverId;
 	// 聊天内容
 	private String msg;
-	// 用于消息的签收
-	private String msgId;
-	
+
 }
