@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hncj.forum.mapper.ChatListMapper">
+    <select id="selectChat" resultType="cn.edu.hncj.forum.model.ChatList">
+        select * from chat_list where linkId = #{linkId} order by createtime asc;
+    </select>
+
+    <insert id="insertChat" keyProperty="listId" keyColumn="listId">
+        insert into chat_list(linkId,userId,content,createtime) values (#{linkId},#{fromId},#{content},#{timestamp});
+    </insert>
+
+</mapper>
