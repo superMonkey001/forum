@@ -84,8 +84,6 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
             Long toId = dataContent.getChatMsg().getReceiverId();
             String fromName = (userMapper.selectByPrimaryKey(fromId)).getName();
             String toName = (userMapper.selectByPrimaryKey(toId)).getName();
-            log.info("toName:{}",toName);
-            log.info("fromName:{}",fromName);
             Long min = Math.min(fromId, toId);
             Long max = Math.max(fromId, toId);
             // select linkId from user_link where `fromId` = #{min} and `toId` = #{max};

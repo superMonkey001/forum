@@ -60,10 +60,12 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'histories'}">
                 <div class="media" th:each="question:${pagination.data}">
                     <div class="media-left">
-                        <a th:if="${session.user != null && session.user.id != question.creator}" th:href="${'/chat?recId='+question.getCreator()}">
+                        <a th:if="${session.user != null && session.user.id != question.creator}"
+                           th:href="${'/chat?recId='+question.getCreator()}">
                             <img class="media-object img-circle" th:src="${question.user.avatarUrl}">
                         </a>
-                        <a th:if="${session.user == null || session.user.id == question.creator}" href="javascript:void(0)">
+                        <a th:if="${session.user == null || session.user.id == question.creator}"
+                           href="javascript:void(0)">
                             <img class="media-object img-circle" th:src="${question.user.avatarUrl}">
                         </a>
                     </div>
@@ -77,6 +79,9 @@
 
             </div>
 
+            <!--展示我的私信-->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'chats'}">
+            </div>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <nav aria-label="Page navigation">
                     <ul class="pagination">
@@ -125,6 +130,9 @@
                 <a href="/profile/histories"
                    th:class="${section == 'histories' ? 'active list-group-item ' : 'list-group-item'}"
                    th:style="${section == 'histories' ? 'background: #EAE8E8;color: #636363;border: 0;text-shadow: 0 0px 0px;' : ''}">浏览历史</a>
+                <a href="/profile/chats"
+                   th:class="${section == 'chats' ? 'active list-group-item ' : 'list-group-item'}"
+                   th:style="${section == 'chats' ? 'background: #EAE8E8;color: #636363;border: 0;text-shadow: 0 0px 0px;' : ''}">我的私信</a>
             </div>
         </div>
     </div>

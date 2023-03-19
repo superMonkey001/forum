@@ -78,8 +78,20 @@ public class ProfileController {
             paginationDTO.setShowNext(false);
             paginationDTO.setShowFirstPage(false);
             paginationDTO.setShowEndPage(false);
-            model.addAttribute("section","histories");
-            model.addAttribute("sectionName","历史记录");
+            model.addAttribute("section", "histories");
+            model.addAttribute("sectionName", "历史记录");
+            model.addAttribute("pagination", paginationDTO);
+        }// 如果用户点击的是“我的私信”
+        else if ("chats".equals(action)) {
+            PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO();
+            paginationDTO.setPage(0);
+            paginationDTO.setTotalPage(1);
+            paginationDTO.setShowPrevious(false);
+            paginationDTO.setShowNext(false);
+            paginationDTO.setShowFirstPage(false);
+            paginationDTO.setShowEndPage(false);
+            model.addAttribute("section", "chats");
+            model.addAttribute("sectionName", "我的私信");
             model.addAttribute("pagination", paginationDTO);
         }
 

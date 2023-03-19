@@ -310,8 +310,7 @@
                         <a href="/publish" class="text">发布</a>
                     </li>
                     <li th:if="${session.user != null}">
-                        <a href="/profile/replies" style="text-shadow: none;color: white;">通知 <span class="badge"
-                                                                                                    th:text="${session.unreadCount}"></span></a>
+                        <a href="/profile/replies" style="text-shadow: none;color: white;">通知 <span class="badge" th:text="${session.unreadCount}"></span></a>
                     </li>
 
                     <li th:if="${session.user != null}" class="dropdown">
@@ -324,7 +323,7 @@
                             <li><a href="/profile/questions">我的问题</a></li>
                             <li><a href="/profile/histories">浏览历史</a></li>
                             <li><a href="/profile/replies">最新回复</a></li>
-                            <li><a >我的私信</a></li>
+                            <li><a href="/profile/chats">我的私信</a></li>
                             <li><a id="logout" href="javascript:void(0)">退出登录</a></li>
                         </ul>
                     </li>
