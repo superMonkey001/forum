@@ -3,26 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script th:inline="javascript">
+        //获取ws服务地址
+        var wsUrl = [[${ws}]]
+        var sendId = [[${sendId}]]
+        var recId = [[${recId}]]
+    </script>
     <script>
-
-
-        var socket;
         //判断当前浏览器是否支持websocket
         if (window.WebSocket) {
             //go on
-            socket = new WebSocket("ws://localhost:11111/chat");
-            //相当于channelReado, ev 收到服务器端回送的消息
+            socket = new WebSocket(wsUrl);
+            //相当于channelRead, ev 收到服务器端回送的消息
             socket.onmessage = function (ev) {
-                var rt = document.getElementById("responseText");
-                rt.value = rt.value + "\n" + ev.data;
-            }
-
+                var data = JSON.parse(ev.data);
+                // rt
+                // [
+                // {"senderId":9917204354759522,"receiverId":1,"msg":"\\"hi,superMonkey\\""},
+                // {"senderId":1,"receiverId":9917204354759522,"msg":"\\"hi,444\\""},
+                // {"senderId":1,"receiverId":9917204354759522,"msg":"\\"h1,555\\""}]\n
+                // {"action":null,"chatMsg":{"senderId":1,"receiverId":9917204354759522,"msg":"\\"h1,555\\""},"extand":null}'
+                // 如果是登录后返回所有聊天记录，这个msgs就是一个数组
+                if (data instanceof Array) {
+                    data.forEach(item => {
+                            var rt = document.getElementById("responseText");
+                            rt.value = rt.value + "\n" + item.senderName + ":" + item.msg;
+                        }
+                    )
+                }
+                // 如果是发送消息，这个消息就是单条
+                else {
+                    var rt = document.getElementById("responseText");
+                    rt.value = rt.value + "\n" + data.senderName + ":" + data.msg;
+                }
+            };
             //相当于连接开启(感知到连接开启)
-            socket.onopen = function () {
+            socket.onopen = function (ev) {
                 console.log("websocket连接已建立...");
                 // 获取我的信息
-                var sendId = $('#sendId').val;
-                var recId = $('#recId').val;
                 // 构建ChatMsg
                 var chatMsg = {
                     senderId: sendId,
@@ -37,10 +55,7 @@
                 };
                 // 发送websocket
                 socket.send(JSON.stringify(dataContent));
-                // 定时发送心跳
-                setInterval("CHAT.keepalive()", 10000);
-            }
-
+            };
             //相当于连接关闭(感知到连接关闭)
             socket.onclose = function (ev) {
                 var rt = document.getElementById("responseText");
@@ -59,8 +74,6 @@
                 console.log("用户发送消息...");
                 //通过socket 发送消息
                 // 获取我的信息
-                var sendId = $('#sendId').val;
-                var recId = $('#recId').val;
                 var messageJson = JSON.stringify(message);
 
                 // 构建ChatMsg
@@ -77,6 +90,7 @@
                 };
                 // 发送websocket
                 socket.send(JSON.stringify(dataContent));
+                document.getElementById('messageText').value=''
             } else {
                 alert("连接没有开启");
             }
@@ -87,7 +101,7 @@
 <input type="hidden" th:value="${sendId}" id="sendId">
 <input type="hidden" th:value="${recId}" id="recId">
 <form onsubmit="return false">
-    <textarea name="message" style="height: 300px; width: 300px"></textarea>
+    <textarea id="messageText" name="message" style="height: 300px; width: 300px"></textarea>
     <input type="button" value="发送" onclick="send(this.form.message.value)">
     <textarea id="responseText" style="height: 300px; width: 300px"></textarea>
     <input type="button" value="清空内容" onclick="document.getElementById('responseText').value=''">

@@ -24,7 +24,9 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     USER_OR_PASSWORD_ERROR(2015,"用户名或密码错误"),
     USER_OR_PASSWORD_IS_NULL(2016,"用户名或密码为空"),
     TOKEN_ERROR(2017,"token不合法"),
-    EMAIL_IS_USED(2018,"该邮箱已被注册")
+    EMAIL_IS_USED(2018,"该邮箱已被注册"),
+    NOT_ALLOW_TALK_YOURSELF(2019,"不能跟自己聊天"),
+    REC_USER_NOT_EXIST(2020,"聊天的用户不存在")
     ;
 
     private String message;

@@ -44,17 +44,21 @@ public class QuestionController {
             throw new CustomizeException(CustomizeErrorCode.LINK_DOES_NOT_EXIST);
         }
         HistoryCache historyCache = (HistoryCache) request.getSession().getAttribute("historyCache");
-        HistoryCache.Node node = null;
+        HistoryCache.Node node;
+        QuestionDTO questionDTO;
         if (historyCache != null) {
             node = historyCache.get(questionId);
+            if (node != null) {
+                questionDTO = (QuestionDTO) node.val;
+            } else {
+                questionDTO = questionService.findById(questionId);
+                // 添加浏览记录到缓存中
+                historyCache.put(questionDTO.getId(), questionDTO);
+            }
         }
-        QuestionDTO questionDTO;
-        if (node != null) {
-            questionDTO = (QuestionDTO) node.val;
-        } else {
+        // 用户压根没有登录
+        else {
             questionDTO = questionService.findById(questionId);
-            // 添加浏览记录到缓存中
-            historyCache.put(questionDTO.getId(), questionDTO);
         }
         model.addAttribute("question", questionDTO);
 

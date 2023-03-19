@@ -34,7 +34,10 @@
             <hr>
             <div class="media" th:each="question:${pagination.data}">
                 <div class="media-left">
-                    <a href="javascript:void(0)">
+                    <a th:if="${session.user != null && session.user.id != question.creator}" th:href="${'/chat?recId='+question.getCreator()}">
+                        <img class="media-object img-circle" th:src="${question.user.avatarUrl}">
+                    </a>
+                    <a th:if="${session.user == null || session.user.id == question.creator}" href="javascript:void(0)">
                         <img class="media-object img-circle" th:src="${question.user.avatarUrl}">
                     </a>
                 </div>

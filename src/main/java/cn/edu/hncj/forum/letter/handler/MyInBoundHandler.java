@@ -14,7 +14,7 @@ import io.netty.handler.stream.ChunkedWriteHandler;
 public class MyInBoundHandler extends SimpleChannelInboundHandler {
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("收到新连接");
         //websocket协议本身是基于http协议的，所以这边也要使用http解编码器
         ChannelPipeline pipeline = ctx.pipeline();
@@ -23,8 +23,9 @@ public class MyInBoundHandler extends SimpleChannelInboundHandler {
         pipeline.addLast(new ChunkedWriteHandler());
         pipeline.addLast(new HttpObjectAggregator(8192));
         //ctx.pipeline().addLast(new OnlineWebSocketHandler());//添加在线客服聊天消息处理类
+        pipeline.addLast(new WebSocketServerProtocolHandler("/ws", null, true, 65536 * 10));
         //添加测试的聊天消息处理类
         pipeline.addLast(new WebSocketHandler());
-        pipeline.addLast(new WebSocketServerProtocolHandler("/ws", null, true, 65536 * 10));
     }
+
 }

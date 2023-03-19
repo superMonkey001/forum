@@ -18,25 +18,29 @@ import java.net.InetSocketAddress;
  * @Date 2023-03-18 12:40
  */
 
-@Component
 public class NettyStarter {
 
-    @Value("${netty.port}")
-    private Integer nettyPort;
 
+    private final int port;
+    public NettyStarter(int port) {
+        this.port = port;
+    }
 
     public void start() throws InterruptedException {
-        NioEventLoopGroup boss = new NioEventLoopGroup(1);
+        NioEventLoopGroup boss = new NioEventLoopGroup();
         NioEventLoopGroup worker = new NioEventLoopGroup();
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
             ChannelFuture channelFuture = bootstrap
                     .option(ChannelOption.SO_BACKLOG, 1024)
                     .group(boss, worker)
+                    .localAddress(this.port)
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer())
-                    .bind(new InetSocketAddress("127.0.0.1", nettyPort))
+                    .bind()
                     .sync();
+                    //.bind(new InetSocketAddress("127.0.0.1", port))
+
             System.out.println(NettyStarter.class + " 启动正在监听： " + channelFuture.channel().localAddress());
             // 关闭服务器通道
             channelFuture.channel().closeFuture().sync();

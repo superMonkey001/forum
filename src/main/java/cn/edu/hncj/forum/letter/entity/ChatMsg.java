@@ -18,5 +18,8 @@ public class ChatMsg implements Serializable {
 	private Long receiverId;
 	// 聊天内容
 	private String msg;
-
+	// 发送者的用户昵称
+	private String senderName;
+	// 接受者的用户昵称
+	private String receiverName;
 }

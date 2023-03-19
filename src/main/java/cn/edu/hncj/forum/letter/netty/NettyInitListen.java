@@ -7,17 +7,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class NettyInitListen implements CommandLineRunner {
 
+    // @Value("${netty.port}")
+    // private Integer nettyPort;
     @Value("${server.port}")
-    Integer serverPort;
+    private Integer serverPort;
 
     @Override
     public void run(String... args) throws Exception {
         try {
             System.out.println("nettyServer starting ...");
             System.out.println("http://127.0.0.1:" + serverPort + "/chat");
-            new NettyStarter().start();
+            new NettyStarter(11111).start();
         } catch (Exception e) {
-            System.out.println("NettyServerError:" + e.getMessage());
+            System.out.println("NettyServerError:" + e);
         }
     }
 }
