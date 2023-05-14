@@ -8,6 +8,8 @@ import cn.edu.hncj.forum.exception.CustomizeErrorCode;
 import cn.edu.hncj.forum.exception.CustomizeException;
 import cn.edu.hncj.forum.model.Comment;
 import cn.edu.hncj.forum.model.User;
+import cn.edu.hncj.forum.notify.entity.Event;
+import cn.edu.hncj.forum.notify.producer.EventProducer;
 import cn.edu.hncj.forum.service.CommentService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+import static cn.edu.hncj.forum.notify.constant.CommunityConstant.TOPIC_COMMENT;
+
 /**
  * @author FanJian
  */
@@ -26,6 +30,9 @@ public class CommentController {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private EventProducer eventProducer;
 
     @ResponseBody
     @PostMapping("/comment")
@@ -51,6 +58,13 @@ public class CommentController {
         comment.setLikeCount(0L);
         comment.setCommentCount(0);
         commentService.insert(comment, user);
+        Event event = new Event();
+        event.setTopic(TOPIC_COMMENT)
+                .setUserId(Math.toIntExact(user.getId()))
+                .setEntityType(commentParamDTO.getType())
+                // .setEntityId(/*comment.getId()*/)
+                .setData("postId",String.valueOf(commentParamDTO.getParentId()));
+        eventProducer.fireEvent(event);
         return ResultDTO.okOf();
     }
 
