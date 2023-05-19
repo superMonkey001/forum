@@ -1,5 +1,6 @@
 package cn.edu.hncj.forum.controller;
 
+import cn.edu.hncj.forum.ac_automation.ACAutomation;
 import cn.edu.hncj.forum.cache.TagCache;
 import cn.edu.hncj.forum.dto.QuestionDTO;
 import cn.edu.hncj.forum.model.Question;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author FanJian
@@ -24,6 +27,9 @@ import javax.servlet.http.HttpSession;
 public class PublishController {
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private ACAutomation acAutomation;
 
     /**
      * 通过编辑按钮完成更新后，发布
@@ -103,6 +109,17 @@ public class PublishController {
 
         if (user == null) {
             model.addAttribute("error", "用户未登录");
+            return "publish";
+        }
+
+        Set<String> strings = acAutomation.containsWords(description);
+        if (strings != null && strings.size() > 0) {
+            StringBuilder errorMsg = new StringBuilder();
+            errorMsg.append("包含不文明词汇:");
+            for (String str : strings) {
+                errorMsg.append(" " + str + " ");
+            }
+            model.addAttribute("error", errorMsg);
             return "publish";
         }
 
