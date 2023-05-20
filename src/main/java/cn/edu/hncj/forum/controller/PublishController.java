@@ -67,7 +67,7 @@ public class PublishController {
         model.addAttribute("id", question.getId());
         String uuid = UUID.randomUUID().toString();
         // zookeeper分布式锁的token
-        redisTemplate.opsForValue().set("zookeeperToken",uuid,40, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(uuid,"",40, TimeUnit.SECONDS);
         model.addAttribute("zookeeperToken", uuid);
         return "publish";
     }
@@ -175,9 +175,9 @@ public class PublishController {
                 log.warn("当前交易正在被处理中");
                 return false;
             }
-            String storedToken = redisTemplate.opsForValue().get("zookeeperToken");
+            boolean isExist = redisTemplate.hasKey(zookeeperToken);
             // 判断Token是否存在且合法
-            if (!zookeeperToken.equals(storedToken)) {
+            if (!isExist) {
                 log.warn("指定的Token不存在.");
                 return false;
             }
