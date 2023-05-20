@@ -102,6 +102,7 @@
             <hr>
             <form action="/publish" method="post">
                 <input type="hidden" name="id" th:value="${id}">
+                <input type="hidden" name="zookeeperToken" th:value="${zookeeperToken}">
 
                 <!--标题输入框-->
                 <div class="form-group">

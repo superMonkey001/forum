@@ -26,7 +26,8 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     TOKEN_ERROR(2017,"token不合法"),
     EMAIL_IS_USED(2018,"该邮箱已被注册"),
     NOT_ALLOW_TALK_YOURSELF(2019,"不能跟自己聊天"),
-    REC_USER_NOT_EXIST(2020,"聊天的用户不存在")
+    REC_USER_NOT_EXIST(2020,"聊天的用户不存在"),
+    CLICK_TOO_FAST(2021,"手速太快啦")
     ;
 
     private String message;
